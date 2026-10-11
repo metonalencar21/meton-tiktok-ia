@@ -95,6 +95,7 @@ def build_scenes(item):
     return [start]+middle+[end]
 
 def make_voice(text, audio_path, mode):
+    # Primeiro, voz neural gratuita (quando o serviço está disponível).
     if mode in ("auto","edge") and shutil.which("edge-tts"):
         try:
             run(["edge-tts","--voice","pt-BR-AntonioNeural","--rate","-6%",
@@ -102,10 +103,22 @@ def make_voice(text, audio_path, mode):
                 stdout=subprocess.DEVNULL,stderr=subprocess.PIPE,timeout=120)
             if audio_path.exists() and audio_path.stat().st_size>1000:
                 return "edge-tts"
-        except (subprocess.CalledProcessError,subprocess.TimeoutExpired):
+        except (subprocess.CalledProcessError,subprocess.TimeoutExpired) as exc:
+            print("Edge TTS indisponível:",exc,file=sys.stderr)
             audio_path.unlink(missing_ok=True)
     if mode=="edge":
         raise RuntimeError("Edge TTS indisponível, e fallback não autorizado")
+    # Segunda opção: Google Translate TTS, sem chave de API.
+    if mode=="auto":
+        try:
+            from gtts import gTTS
+            gTTS(text=text,lang="pt",tld="com.br",slow=False,lang_check=False,timeout=15).save(str(audio_path))
+            if audio_path.exists() and audio_path.stat().st_size>1000:
+                return "gtts"
+        except Exception as exc:
+            print("gTTS indisponível:",exc,file=sys.stderr)
+            audio_path.unlink(missing_ok=True)
+    # Último recurso: voz local sem conexão. Pode soar robótica.
     wav=audio_path.with_suffix(".wav")
     run(["espeak","-v","pt-br","-s","152","-a","160","-w",str(wav),text],
         stdout=subprocess.DEVNULL)

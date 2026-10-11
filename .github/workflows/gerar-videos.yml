@@ -41,7 +41,7 @@ jobs:
       - name: Validar roteiros
         run: python tests/test_bank.py
       - name: Produzir vídeos verticais 100% IA
-        run: python scripts/produce.py --count 4 --voice auto --repo "$GITHUB_REPOSITORY" --out public
+        run: python scripts/produce.py --count 4 --voice auto --overwrite --repo "$GITHUB_REPOSITORY" --out public
       - name: Verificar duração, formato e áudio
         run: python tests/verify_videos.py
       - name: Guardar vídeos públicos e manifesto

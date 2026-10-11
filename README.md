@@ -16,7 +16,7 @@ Projeto de vídeos educativos originais, sem uso de imagem ou voz real do titula
 4. Se houver erro de gravação: Settings > Actions > General > Workflow permissions > Read and write permissions.
 
 ## Fontes
-- scripts/produce.py: renderizador Pillow + ffmpeg + voz sintética Edge TTS ou fallback eSpeak.
+- scripts/produce.py: renderizador Pillow + ffmpeg + voz sintética Edge TTS, gTTS ou fallback local eSpeak.
 - topics.json: 16 roteiros educativos originais para quatro semanas; novas pautas são necessárias depois.
 - tests/test_bank.py e tests/verify_videos.py: validações automáticas de roteiros e mídia.
 - requirements.txt: dependências Python.
