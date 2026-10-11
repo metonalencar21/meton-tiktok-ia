@@ -1,0 +1,386 @@
+[
+  {
+    "id": "golpe-whatsapp",
+    "title": "O golpe da mensagem urgente",
+    "hook": "Recebeu um pedido de Pix urgente? Pare antes de pagar.",
+    "tips": [
+      [
+        "CONFIRA QUEM ENVIOU",
+        "Uma foto conhecida no aplicativo não comprova identidade. Se alguém pedir dinheiro por mensagem, telefone para a pessoa usando o número que você já tinha salvo. Nunca use um número informado pelo próprio solicitante para fazer essa confirmação."
+      ],
+      [
+        "NÃO SIGA A PRESSA",
+        "Golpes costumam usar histórias de emergência para impedir que você pense com calma. Mesmo quando a mensagem parece verdadeira, interrompa a conversa, procure a pessoa por outro canal e confirme a situação antes de transferir qualquer valor."
+      ],
+      [
+        "CUIDADO COM CÓDIGOS",
+        "Não compartilhe códigos de autenticação enviados por SMS ou pelo aplicativo. Esses números podem permitir acesso indevido à sua conta. Se alguém solicitar um código, desconfie e procure ajuda diretamente nos canais oficiais do serviço."
+      ],
+      [
+        "PROTEJA SUA CONTA",
+        "Ative a verificação em duas etapas e revise os aparelhos conectados à conta. Converse com familiares sobre pedidos inesperados de dinheiro. Um hábito simples de conferir antes de pagar pode evitar uma perda difícil de recuperar."
+      ]
+    ],
+    "cta": "Salve este vídeo e envie a alguém que costuma resolver pagamentos pelo celular."
+  },
+  {
+    "id": "senha-segura",
+    "title": "Uma senha para cada conta",
+    "hook": "Usar a mesma senha em todos os lugares pode sair muito caro.",
+    "tips": [
+      [
+        "EVITE REPETIR",
+        "Quando uma senha aparece em um vazamento, criminosos podem tentar a mesma combinação em outros serviços. Usar senhas diferentes limita o estrago de um incidente. Comece protegendo seu e-mail, seu banco e as contas mais importantes."
+      ],
+      [
+        "PREFIRA SENHAS LONGAS",
+        "O comprimento de uma senha ajuda bastante. Evite datas de aniversário, nomes conhecidos e sequências óbvias. Uma frase extensa e única ou uma senha aleatória gerada por aplicativo confiável tende a ser melhor do que pequenas variações da mesma palavra."
+      ],
+      [
+        "USE UM GERENCIADOR",
+        "Um gerenciador de senhas pode criar e guardar combinações únicas. Assim, você não precisa memorizar dezenas de senhas nem anotar tudo em locais visíveis. Proteja o gerenciador com uma senha principal forte e recursos adicionais de segurança."
+      ],
+      [
+        "ATENÇÃO AO SEGUNDO FATOR",
+        "Sempre que disponível, ative uma segunda etapa de verificação. Aplicativos autenticadores e chaves de acesso podem adicionar proteção além da senha. Confira também se as opções de recuperação estão atualizadas e pertencem realmente a você."
+      ]
+    ],
+    "cta": "Faça hoje uma revisão das contas importantes e compartilhe esta orientação."
+  },
+  {
+    "id": "permissoes-apps",
+    "title": "Seu celular pode compartilhar demais",
+    "hook": "Você sabe quais aplicativos têm acesso à sua câmera e localização?",
+    "tips": [
+      [
+        "REVISE AS PERMISSÕES",
+        "Abra as configurações de privacidade do celular e observe quais aplicativos acessam câmera, microfone, fotos e localização. Nem todo aplicativo precisa dessas informações para funcionar. Revogue o que não parecer necessário para sua atividade principal."
+      ],
+      [
+        "PERMITA SÓ DURANTE O USO",
+        "Quando o sistema oferecer, prefira permitir localização apenas enquanto estiver usando o aplicativo. Esse ajuste reduz o acesso em segundo plano. Alguns programas legítimos precisam de permissões adicionais, então avalie a finalidade antes de alterar."
+      ],
+      [
+        "APAGUE O QUE NÃO USA",
+        "Aplicativos esquecidos podem continuar instalados e acumular permissões. Revise sua lista periodicamente e remova programas que não utiliza. Antes de excluir, confirme se há dados ou documentos importantes que precisam ser salvos."
+      ],
+      [
+        "INSTALE COM CUIDADO",
+        "Prefira lojas oficiais e confira o nome do desenvolvedor antes de instalar. Leia a lista de permissões e evite arquivos recebidos por links desconhecidos. Uma boa proteção começa antes mesmo do primeiro acesso."
+      ]
+    ],
+    "cta": "Confira as permissões do seu celular e acompanhe mais dicas de tecnologia."
+  },
+  {
+    "id": "backup-fotos",
+    "title": "E se seu celular sumisse hoje?",
+    "hook": "Suas fotos sobreviveriam se você perdesse o celular agora?",
+    "tips": [
+      [
+        "BACKUP NÃO É SINCRONIA",
+        "Uma pasta sincronizada pode refletir exclusões ou alterações feitas por engano. Uma cópia de segurança precisa permitir recuperar arquivos importantes depois de um problema. Entenda como seu serviço guarda versões e como funciona a restauração."
+      ],
+      [
+        "CONFIRA A ÚLTIMA CÓPIA",
+        "Não basta ativar o backup uma vez e esquecer. Veja quando ocorreu a última cópia e se ela incluiu as pastas que você realmente usa. Periodicamente, tente abrir um arquivo de teste para garantir que está recuperável."
+      ],
+      [
+        "GUARDE EM DOIS LUGARES",
+        "Manter cópias em locais diferentes reduz riscos. Pode ser um serviço confiável na nuvem combinado com um dispositivo externo guardado em segurança. A alternativa escolhida precisa caber no seu orçamento e ser fácil de manter."
+      ],
+      [
+        "PRIVACIDADE IMPORTA",
+        "Antes de enviar fotos pessoais para a nuvem, revise as configurações de compartilhamento e a segurança da conta. Ative verificação em duas etapas e proteja o acesso a arquivos sensíveis. Backup também exige cuidado com a privacidade."
+      ]
+    ],
+    "cta": "Salve este vídeo e faça hoje uma verificação do seu backup."
+  },
+  {
+    "id": "golpe-qr",
+    "title": "O QR Code também exige cuidado",
+    "hook": "Nem todo QR Code leva para um lugar seguro.",
+    "tips": [
+      [
+        "OLHE O ENDEREÇO",
+        "Antes de abrir um link a partir de um QR Code, confira o domínio exibido pelo celular. Compare o endereço com o site oficial da instituição. Evite fornecer dados pessoais em uma página que você não conseguiu confirmar."
+      ],
+      [
+        "ETIQUETAS SUSPEITAS",
+        "Em locais públicos, criminosos podem colar outro código sobre o original. Observe se há adesivos inesperados em cartazes, mesas e máquinas. Se estiver em dúvida, peça confirmação a um funcionário identificado."
+      ],
+      [
+        "CONFIRA O RECEBEDOR",
+        "Quando o QR Code for usado para pagar, leia atentamente o nome do destinatário e o valor antes de confirmar. Cancelar uma transferência pode ser difícil. Conferir esses dados demora segundos e faz diferença."
+      ],
+      [
+        "NÃO INSTALE ARQUIVOS",
+        "Um código que leva ao download de aplicativo fora da loja oficial merece atenção redobrada. Em vez de instalar imediatamente, entre no site por um endereço que você conhece e confira as orientações de segurança."
+      ]
+    ],
+    "cta": "Compartilhe para que mais pessoas saibam verificar códigos antes de pagar."
+  },
+  {
+    "id": "bateria-celular",
+    "title": "Sua bateria está durando menos?",
+    "hook": "Três hábitos simples podem ajudar a bateria do celular.",
+    "tips": [
+      [
+        "VEJA O CONSUMO REAL",
+        "Abra as configurações de bateria e confira quais aplicativos consomem mais energia. Um serviço com atividade constante em segundo plano pode explicar parte do gasto. Antes de alterar configurações, veja quais tarefas você realmente precisa manter ativas."
+      ],
+      [
+        "ATENÇÃO À TELA",
+        "Brilho muito alto e tela ligada por longos períodos consomem bastante energia. Ajuste o brilho automático quando fizer sentido e diminua o tempo para apagar a tela. Teste as mudanças durante alguns dias antes de concluir o resultado."
+      ],
+      [
+        "REDES E LOCALIZAÇÃO",
+        "Aplicativos que consultam localização continuamente podem aumentar o consumo. Revise permissões desnecessárias e a atividade de serviços que não usa. Não desligue funções importantes para emergência ou navegação apenas para economizar bateria."
+      ],
+      [
+        "SEM PROMESSAS MILAGROSAS",
+        "Nenhum aplicativo recupera magicamente a capacidade de uma bateria desgastada. Se o aparelho descarrega rapidamente ou aquece de forma incomum, procure avaliar o estado da bateria e possíveis atualizações do sistema."
+      ]
+    ],
+    "cta": "Salve para testar estas medidas de economia sem instalar nada."
+  },
+  {
+    "id": "compras-online",
+    "title": "Oferta boa demais? Investigue",
+    "hook": "Um preço incrivelmente baixo pode ser a primeira pista de uma loja falsa.",
+    "tips": [
+      [
+        "CONFIRA A LOJA",
+        "Antes de comprar, verifique se o endereço é oficial, se há informações claras sobre a empresa e quais canais de atendimento estão disponíveis. Não confie apenas no visual da página, pois sites fraudulentos também conseguem parecer profissionais."
+      ],
+      [
+        "DESCONFIE DA URGÊNCIA",
+        "Contadores regressivos, descontos exagerados e mensagens que dizem que o estoque acaba agora podem pressionar uma decisão impulsiva. Compare preços em outras lojas e reserve alguns minutos para pesquisar a reputação da empresa."
+      ],
+      [
+        "CUIDADO COM O PAGAMENTO",
+        "Confira o destinatário de transferências e evite seguir instruções de pagamento recebidas por mensagens fora do ambiente de compra. Sempre que possível, escolha meios que ofereçam mecanismos de contestação e acompanhe os lançamentos."
+      ],
+      [
+        "GUARDE OS REGISTROS",
+        "Salve o comprovante, a descrição do produto e os dados do pedido. Isso ajuda a resolver entregas equivocadas ou cobranças indevidas. Caso perceba sinais de fraude, entre em contato com o banco e os canais de defesa do consumidor."
+      ]
+    ],
+    "cta": "Envie este vídeo a alguém que adora promoções na internet."
+  },
+  {
+    "id": "atualizacoes",
+    "title": "Por que atualizar o celular?",
+    "hook": "Adiar atualizações por meses pode deixar problemas de segurança abertos.",
+    "tips": [
+      [
+        "NÃO É SÓ APARÊNCIA",
+        "Atualizações podem corrigir vulnerabilidades e falhas que não são visíveis na tela. Instalar correções oficiais reduz a exposição a problemas conhecidos. Verifique as notas da atualização quando quiser entender o que foi alterado."
+      ],
+      [
+        "ATUALIZE OS APLICATIVOS",
+        "O sistema operacional não é a única parte importante. Navegadores, aplicativos de mensagens e serviços bancários também recebem correções. Ative atualizações automáticas quando for adequado à sua conexão e armazenamento."
+      ],
+      [
+        "PREPARE A INSTALAÇÃO",
+        "Antes de atualizar, confira se há espaço livre, carga suficiente e cópia dos dados importantes. Baixe atualizações usando as configurações do dispositivo e não por arquivos enviados em mensagens aleatórias."
+      ],
+      [
+        "FONTES OFICIAIS",
+        "Se um aplicativo anunciar atualização urgente por uma mensagem suspeita, abra a loja oficial e confira diretamente. Não digite senhas em páginas desconhecidas. A combinação de atualização e atenção é mais útil do que qualquer solução milagrosa."
+      ]
+    ],
+    "cta": "Revise hoje se seus aplicativos mais importantes estão atualizados."
+  },
+  {
+    "id": "foco-digital",
+    "title": "Seu celular interrompe tudo?",
+    "hook": "Talvez o problema não seja falta de foco, mas notificações demais.",
+    "tips": [
+      [
+        "ESCOLHA O ESSENCIAL",
+        "Abra as configurações de notificações e deixe alertas importantes, como mensagens da família ou compromissos. Desative avisos promocionais que interrompem você sem necessidade. Você pode testar a configuração e ajustá-la depois."
+      ],
+      [
+        "USE NÃO PERTURBE",
+        "Configure um período de foco para estudar, trabalhar ou descansar. Muitos celulares permitem exceções para contatos prioritários. Assim, você reduz interrupções sem perder a comunicação que considera essencial."
+      ],
+      [
+        "CONSULTE EM HORÁRIOS",
+        "Em vez de olhar a tela a cada vibração, escolha momentos para conferir mensagens não urgentes. Comece com períodos curtos e observe como isso afeta seu trabalho. O objetivo é ter mais controle, não eliminar toda comunicação."
+      ],
+      [
+        "TESTE POR UMA SEMANA",
+        "Faça um experimento simples: compare seu tempo de tela e suas interrupções antes e depois de organizar os alertas. Mude apenas o que fizer sentido para sua rotina. Pequenos ajustes consistentes costumam ser mais sustentáveis."
+      ]
+    ],
+    "cta": "Salve e experimente uma semana com menos notificações."
+  },
+  {
+    "id": "golpe-link",
+    "title": "Esse link merece desconfiança",
+    "hook": "Um link com aparência oficial não significa que seja seguro.",
+    "tips": [
+      [
+        "LEIA O DOMÍNIO",
+        "Nomes de empresas podem aparecer dentro de endereços fraudulentos. Observe com atenção o domínio principal e procure erros de escrita. Em dúvida, abra o aplicativo oficial ou digite o endereço conhecido em vez de tocar no link recebido."
+      ],
+      [
+        "NÃO ENTRE EM PÂNICO",
+        "Mensagens sobre bloqueio imediato de conta ou cobrança inesperada podem usar medo para provocar cliques. Antes de agir, consulte o serviço diretamente e verifique se a situação é real. Nunca forneça códigos de autenticação por pressão."
+      ],
+      [
+        "CUIDADO COM ANEXOS",
+        "Arquivos recebidos de fontes desconhecidas também podem oferecer risco. Evite instalar programas ou permitir permissões incomuns para visualizar supostas faturas. Confira o documento pelos canais oficiais, quando possível."
+      ],
+      [
+        "SE CLICOU, AJA",
+        "Se você inseriu uma senha em página suspeita, altere-a no serviço verdadeiro e revise sessões conectadas. Ative verificação adicional e contate o suporte oficial. Se houve pagamento ou vazamento de dados bancários, procure sua instituição imediatamente."
+      ]
+    ],
+    "cta": "Compartilhe para ajudar alguém a identificar mensagens suspeitas."
+  },
+  {
+    "id": "wifi-publico",
+    "title": "Wi-Fi público exige atenção",
+    "hook": "Usar Wi-Fi grátis pode ser útil, mas exige alguns cuidados.",
+    "tips": [
+      [
+        "CONFIRME A REDE",
+        "Antes de conectar, pergunte ao estabelecimento qual é o nome correto da rede. Uma rede falsa pode ter nome muito parecido com a verdadeira. Desative conexões automáticas a redes desconhecidas."
+      ],
+      [
+        "SITES SEGUROS",
+        "Confira se o navegador usa uma conexão criptografada e mostra o domínio certo. Isso reduz determinados riscos, mas não transforma toda rede pública em ambiente confiável. Evite ignorar alertas de certificado."
+      ],
+      [
+        "CUIDADOS EM CONTAS",
+        "Quando possível, prefira sua rede móvel para tarefas sensíveis, principalmente se houver dúvidas sobre a conexão. Não compartilhe senhas ou códigos com supostos atendentes. Proteja suas contas com autenticação adicional."
+      ],
+      [
+        "ESQUEÇA A REDE",
+        "Depois de terminar, remova redes públicas salvas que você não pretende usar novamente. Isso evita algumas reconexões indesejadas. Atualize o sistema e mantenha a segurança do aparelho em dia."
+      ]
+    ],
+    "cta": "Salve estas dicas antes da próxima viagem."
+  },
+  {
+    "id": "fotos-duplicadas",
+    "title": "Mais espaço sem apagar memórias",
+    "hook": "Seu celular está sem espaço? Comece pelo que é seguro revisar.",
+    "tips": [
+      [
+        "VEJA O DIAGNÓSTICO",
+        "Abra o painel de armazenamento e observe o que realmente ocupa espaço. Fotos, vídeos, aplicativos e downloads podem ter pesos bem diferentes. Não apague arquivos importantes apenas porque um aplicativo chamou a atenção."
+      ],
+      [
+        "ORGANIZE DOWNLOADS",
+        "A pasta de downloads costuma acumular cópias antigas e arquivos usados uma única vez. Revise item por item antes de excluir. Abra documentos desconhecidos ou importantes para confirmar que não são necessários."
+      ],
+      [
+        "APPS NÃO USADOS",
+        "Aplicativos grandes podem guardar dados em cache. Verifique opções oficiais de limpeza e os arquivos que seriam removidos. Evite apagar dados de aplicativos sem saber se isso elimina conversas ou documentos."
+      ],
+      [
+        "CÓPIA ANTES DE LIMPAR",
+        "Antes de excluir fotos ou vídeos, confira se há uma cópia recuperável em outro lugar. Esvaziar a lixeira pode impedir a restauração. Uma limpeza tranquila e gradual costuma ser mais segura."
+      ]
+    ],
+    "cta": "Compartilhe com alguém que está sempre sem espaço no celular."
+  },
+  {
+    "id": "voz-falsa",
+    "title": "Cuidado com a voz clonada",
+    "hook": "Uma voz parecida com a de um familiar já não basta como confirmação.",
+    "tips": [
+      [
+        "ÁUDIO PODE SER SINTÉTICO",
+        "Ferramentas de inteligência artificial podem imitar características de voz com gravações disponíveis. Por isso, uma mensagem de áudio ou ligação surpreendente não deve ser a única prova de identidade, especialmente quando envolve dinheiro."
+      ],
+      [
+        "CONFIRME POR OUTRO CANAL",
+        "Ao receber um pedido inesperado, ligue para um número conhecido ou converse pessoalmente. Evite usar contatos enviados na própria mensagem suspeita. A confirmação independente dificulta golpes que imitam familiares ou colegas."
+      ],
+      [
+        "COMBINE UMA VERIFICAÇÃO",
+        "Famílias podem combinar um procedimento simples para pedidos urgentes, como retornar uma ligação ao número já salvo. Evite depender de uma única pergunta que poderia ser descoberta nas redes sociais. O importante é confirmar fora da conversa original."
+      ],
+      [
+        "LINKS E TRANSFERÊNCIAS",
+        "Não transfira dinheiro por pressão nem forneça códigos de segurança. Se a mensagem vier com link, abra o aplicativo oficial para verificar. Informe outros familiares caso identifique uma tentativa de fraude."
+      ]
+    ],
+    "cta": "Salve para lembrar que até um áudio convincente merece confirmação."
+  },
+  {
+    "id": "privacidade-fotos",
+    "title": "Suas fotos revelam mais do que parecem",
+    "hook": "Uma foto comum pode mostrar informações que você não queria divulgar.",
+    "tips": [
+      [
+        "OBSERVE O FUNDO",
+        "Antes de publicar, olhe o que aparece atrás da pessoa ou objeto principal. Endereços, placas, documentos e telas de computador podem revelar detalhes pessoais. Um pequeno corte na imagem pode evitar exposição desnecessária."
+      ],
+      [
+        "LOCALIZAÇÃO NO ARQUIVO",
+        "Algumas fotos guardam metadados, como a localização onde foram feitas. Plataformas tratam esses dados de maneiras diferentes. Para compartilhar arquivos originais, revise as configurações de localização e privacidade."
+      ],
+      [
+        "ATENÇÃO A DOCUMENTOS",
+        "Evite publicar imagens que mostrem números de documentos, cartões, comprovantes ou dados de outras pessoas. Mesmo que uma informação pareça pequena, ela pode ser combinada com outros dados disponíveis na internet."
+      ],
+      [
+        "PENSE EM QUEM VERÁ",
+        "Antes de enviar uma foto a um grupo, considere se ela pode ser encaminhada para outras pessoas. Use controles de audiência quando possível, mas não dependa apenas deles. Compartilhe o mínimo necessário."
+      ]
+    ],
+    "cta": "Faça uma revisão rápida antes da sua próxima publicação."
+  },
+  {
+    "id": "aplicativos-falsos",
+    "title": "App falso: quatro pistas",
+    "hook": "Um aplicativo aparentemente útil pode ser uma imitação perigosa.",
+    "tips": [
+      [
+        "CONFIRA O DESENVOLVEDOR",
+        "Veja quem publica o aplicativo e compare com o site oficial da empresa. Nomes e ícones semelhantes podem confundir até usuários experientes. Evite instalar programas recebidos apenas por links de mensagens."
+      ],
+      [
+        "AVALIAÇÕES NÃO BASTAM",
+        "Uma boa nota ou milhares de downloads não garante segurança absoluta. Leia comentários recentes, confira atualizações e compare as funcionalidades prometidas com a descrição do serviço verdadeiro."
+      ],
+      [
+        "PERMISSÕES ESTRANHAS",
+        "Se um aplicativo simples pedir acesso excessivo a mensagens, contatos ou recursos de acessibilidade, pare e avalie. Algumas funções legítimas exigem permissões específicas, mas é importante entender por que foram solicitadas."
+      ],
+      [
+        "BAIXE DE FONTE CONFIÁVEL",
+        "Dê preferência a lojas oficiais e mantenha o sistema atualizado. Se instalar algo suspeito, remova o aplicativo, revise permissões e verifique se houve alteração de senhas ou dados."
+      ]
+    ],
+    "cta": "Compartilhe para ajudar mais pessoas a identificar aplicativos suspeitos."
+  },
+  {
+    "id": "organizacao-arquivos",
+    "title": "Pare de perder documentos no celular",
+    "hook": "Encontrar um documento pode ser fácil com uma regra simples.",
+    "tips": [
+      [
+        "UMA PASTA POR ASSUNTO",
+        "Separe documentos por temas claros, como trabalho, estudos, finanças e pessoal. Evite criar dezenas de pastas sem necessidade. Uma organização simples aumenta a chance de você conseguir mantê-la no dia a dia."
+      ],
+      [
+        "NOMES QUE AJUDAM",
+        "Use títulos com data e assunto, como ano, mês e tipo de comprovante. Evite nomes genéricos como documento final três. Arquivos bem nomeados ficam mais fáceis de localizar pela busca do aparelho."
+      ],
+      [
+        "CONFIRA O BACKUP",
+        "Se esses documentos são importantes, faça cópias de segurança e saiba onde recuperá-las. Antes de enviar arquivos sensíveis para a nuvem, revise a segurança da conta e as permissões de compartilhamento."
+      ],
+      [
+        "REVISÃO CURTA",
+        "Separe alguns minutos por semana para mover downloads importantes às pastas corretas e eliminar duplicatas conferidas. O hábito constante costuma funcionar melhor do que uma limpeza enorme a cada seis meses."
+      ]
+    ],
+    "cta": "Salve esta organização simples e teste por sete dias."
+  }
+]
