@@ -1,0 +1,62 @@
+name: Gerar videos TikTok IA (gratuito)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/produce.py'
+      - 'topics.json'
+      - '.github/workflows/gerar-videos.yml'
+      - 'requirements.txt'
+  schedule:
+    # Domingos 06:15 em Fortaleza = 09:15 UTC (o GitHub pode atrasar execuções)
+    - cron: '15 9 * * 0'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tiktok-ia-geracao
+  cancel-in-progress: false
+
+jobs:
+  gerar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Obter fontes
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Instalar bibliotecas e utilitários
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak fonts-dejavu-core
+          python -m pip install --disable-pip-version-check -r requirements.txt
+      - name: Validar roteiros
+        run: python tests/test_bank.py
+      - name: Produzir vídeos verticais 100% IA
+        run: python scripts/produce.py --count 4 --voice auto --repo "$GITHUB_REPOSITORY" --out public
+      - name: Verificar duração, formato e áudio
+        run: python tests/verify_videos.py
+      - name: Guardar vídeos públicos e manifesto
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/
+          if git diff --cached --quiet; then
+            echo 'Arquivos já gerados nesta semana.'
+          else
+            git commit -m 'TikTok IA: novos vídeos e manifesto [skip ci]'
+            git push origin HEAD:main
+          fi
+      - name: Resumo da geração
+        run: |
+          echo '## Arquivos gerados para conferência' >> "$GITHUB_STEP_SUMMARY"
+          echo 'A publicação no TikTok depende de validação e agendamento posterior no Metricool.' >> "$GITHUB_STEP_SUMMARY"
+          cat public/manifest.json >> "$GITHUB_STEP_SUMMARY"
