@@ -1,0 +1,71 @@
+{
+  "generated_on": "2026-10-11T17:25:31.035186+00:00",
+  "week": "2026-W42",
+  "week_start": "2026-10-12",
+  "account": "@metonalencar",
+  "publisher": "Metricool via ChatGPT",
+  "auto_publish_enabled": false,
+  "status": "media_pronta_sem_agendamento",
+  "videos": [
+    {
+      "id": "2026-W42-golpe-whatsapp",
+      "title": "O golpe da mensagem urgente",
+      "file": "videos/2026-W42/golpe-whatsapp.mp4",
+      "publication_date": "2026-10-13T18:00:00",
+      "timezone": "America/Fortaleza",
+      "caption": "Recebeu um pedido de Pix urgente? Pare antes de pagar. Salve este vídeo e envie a alguém que costuma resolver pagamentos pelo celular. #Tecnologia #DicasDigitais #SegurancaDigital #AprendaNoTikTok #InteligenciaArtificial",
+      "ai_generated": true,
+      "privacyOption": "PUBLIC_TO_EVERYONE",
+      "duration_s": 103.4,
+      "voice_engine": "espeak",
+      "quality_review_required": true,
+      "published": false,
+      "media_url": "https://raw.githubusercontent.com/metonalencar21/meton-tiktok-ia/main/public/videos/2026-W42/golpe-whatsapp.mp4"
+    },
+    {
+      "id": "2026-W42-senha-segura",
+      "title": "Uma senha para cada conta",
+      "file": "videos/2026-W42/senha-segura.mp4",
+      "publication_date": "2026-10-15T10:00:00",
+      "timezone": "America/Fortaleza",
+      "caption": "Usar a mesma senha em todos os lugares pode sair muito caro. Faça hoje uma revisão das contas importantes e compartilhe esta orientação. #Tecnologia #DicasDigitais #SegurancaDigital #AprendaNoTikTok #InteligenciaArtificial",
+      "ai_generated": true,
+      "privacyOption": "PUBLIC_TO_EVERYONE",
+      "duration_s": 105.2,
+      "voice_engine": "espeak",
+      "quality_review_required": true,
+      "published": false,
+      "media_url": "https://raw.githubusercontent.com/metonalencar21/meton-tiktok-ia/main/public/videos/2026-W42/senha-segura.mp4"
+    },
+    {
+      "id": "2026-W42-permissoes-apps",
+      "title": "Seu celular pode compartilhar demais",
+      "file": "videos/2026-W42/permissoes-apps.mp4",
+      "publication_date": "2026-10-17T10:00:00",
+      "timezone": "America/Fortaleza",
+      "caption": "Você sabe quais aplicativos têm acesso à sua câmera e localização? Confira as permissões do seu celular e acompanhe mais dicas de tecnologia. #Tecnologia #DicasDigitais #SegurancaDigital #AprendaNoTikTok #InteligenciaArtificial",
+      "ai_generated": true,
+      "privacyOption": "PUBLIC_TO_EVERYONE",
+      "duration_s": 104.3,
+      "voice_engine": "espeak",
+      "quality_review_required": true,
+      "published": false,
+      "media_url": "https://raw.githubusercontent.com/metonalencar21/meton-tiktok-ia/main/public/videos/2026-W42/permissoes-apps.mp4"
+    },
+    {
+      "id": "2026-W42-backup-fotos",
+      "title": "E se seu celular sumisse hoje?",
+      "file": "videos/2026-W42/backup-fotos.mp4",
+      "publication_date": "2026-10-18T18:00:00",
+      "timezone": "America/Fortaleza",
+      "caption": "Suas fotos sobreviveriam se você perdesse o celular agora? Salve este vídeo e faça hoje uma verificação do seu backup. #Tecnologia #DicasDigitais #SegurancaDigital #AprendaNoTikTok #InteligenciaArtificial",
+      "ai_generated": true,
+      "privacyOption": "PUBLIC_TO_EVERYONE",
+      "duration_s": 100.2,
+      "voice_engine": "espeak",
+      "quality_review_required": true,
+      "published": false,
+      "media_url": "https://raw.githubusercontent.com/metonalencar21/meton-tiktok-ia/main/public/videos/2026-W42/backup-fotos.mp4"
+    }
+  ]
+}
