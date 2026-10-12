@@ -17,7 +17,7 @@ Projeto de vídeos educativos originais, sem uso de imagem ou voz real do titula
 
 ## Fontes
 - scripts/produce.py: renderizador Pillow + ffmpeg + voz sintética Edge TTS, gTTS ou fallback local eSpeak.
-- topics.json: 16 roteiros educativos originais para quatro semanas; novas pautas são necessárias depois.
+- topics.json: 24 roteiros educativos originais para seis semanas; novas pautas são necessárias depois.
 - tests/test_bank.py e tests/verify_videos.py: validações automáticas de roteiros e mídia.
 - requirements.txt: dependências Python.
 

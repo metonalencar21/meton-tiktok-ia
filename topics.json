@@ -382,5 +382,197 @@
       ]
     ],
     "cta": "Salve esta organização simples e teste por sete dias."
+  },
+  {
+    "id": "comprovante-pix-falso",
+    "title": "Comprovante de Pix não é pagamento",
+    "hook": "Recebeu um comprovante? Confira o saldo antes de entregar o produto.",
+    "tips": [
+      [
+        "ABRA O APLICATIVO DO BANCO",
+        "Imagens de comprovantes podem ser editadas ou reutilizadas. Entre no aplicativo oficial do seu banco e procure a movimentação no extrato. Não confirme o recebimento apenas pelo arquivo enviado em uma conversa."
+      ],
+      [
+        "CONFIRA VALOR E DESTINATÁRIO",
+        "No extrato, verifique o valor, a data, o horário e a conta que recebeu. Um comprovante verdadeiro de outra operação também pode causar confusão. Compare todos os dados antes de liberar mercadoria ou serviço."
+      ],
+      [
+        "CUIDADO COM AGENDAMENTO",
+        "Um Pix agendado ainda pode não ter sido concluído. Procure a indicação de crédito efetivo na conta, e não apenas uma promessa futura de transferência. Se houver dúvida, aguarde a confirmação oficial do banco."
+      ],
+      [
+        "NÃO CLIQUE PARA RECEBER",
+        "Você não precisa abrir links enviados pelo pagador para receber um Pix comum. Mensagens que pedem senha, código ou taxa merecem desconfiança. Acesse o banco diretamente e procure o suporte oficial se necessário."
+      ]
+    ],
+    "cta": "Salve esta orientação e confira sempre o extrato antes de concluir uma venda."
+  },
+  {
+    "id": "suporte-remoto",
+    "title": "O falso suporte quer controlar sua tela",
+    "hook": "Um atendente pediu para instalar um aplicativo de acesso remoto? Pare.",
+    "tips": [
+      [
+        "NÃO INSTALE SOB PRESSÃO",
+        "Criminosos podem se apresentar como banco, loja ou empresa de tecnologia e pedir a instalação de ferramentas de controle remoto. Interrompa a conversa e confirme a solicitação pelos canais oficiais antes de qualquer instalação."
+      ],
+      [
+        "NUNCA MOSTRE SENHAS",
+        "Durante um compartilhamento de tela, informações bancárias, códigos e notificações podem ficar visíveis. Instituições sérias não precisam que você revele senha completa ou código de autenticação para resolver um atendimento comum."
+      ],
+      [
+        "REVOGUE O ACESSO",
+        "Se instalou uma ferramenta por orientação suspeita, desconecte o aparelho da internet, remova o aplicativo e revise permissões de acessibilidade e administração. Procure ajuda oficial antes de voltar a usar contas sensíveis."
+      ],
+      [
+        "AVISE O BANCO RAPIDAMENTE",
+        "Caso tenha aberto o aplicativo bancário ou feito transferências durante o acesso remoto, contate imediatamente a instituição por um número oficial. Registre o ocorrido e altere credenciais usando um aparelho confiável."
+      ]
+    ],
+    "cta": "Compartilhe para que outras pessoas reconheçam o golpe do falso suporte."
+  },
+  {
+    "id": "celular-perdido",
+    "title": "Perdeu o celular? Aja nesta ordem",
+    "hook": "Os primeiros minutos após perder o celular podem proteger suas contas.",
+    "tips": [
+      [
+        "TENTE LOCALIZAR COM SEGURANÇA",
+        "Use o recurso oficial de localização do sistema em outro aparelho confiável. Não vá sozinho a um endereço desconhecido. Se houver indício de furto, preserve as informações e procure as autoridades competentes."
+      ],
+      [
+        "BLOQUEIE O APARELHO",
+        "Ative o modo perdido ou bloqueio remoto e exiba apenas um contato alternativo. Evite colocar dados pessoais demais na mensagem da tela. A exclusão remota pode ser considerada se a recuperação parecer improvável."
+      ],
+      [
+        "PROTEJA AS CONTAS PRINCIPAIS",
+        "Altere primeiro a senha do e-mail principal, pois ele costuma recuperar outras contas. Depois revise banco, mensagens e redes sociais. Encerre sessões desconhecidas e confirme se telefones de recuperação não foram alterados."
+      ],
+      [
+        "FALE COM OPERADORA E BANCO",
+        "Solicite o bloqueio da linha e siga as orientações da operadora sobre o chip. Avise instituições financeiras se o aparelho tinha acesso a elas. Guarde protocolos e registre a ocorrência quando for apropriado."
+      ]
+    ],
+    "cta": "Salve este passo a passo antes de precisar dele."
+  },
+  {
+    "id": "links-nuvem",
+    "title": "Seu link da nuvem pode estar público",
+    "hook": "Compartilhar um arquivo por link pode abrir acesso para mais pessoas do que você imagina.",
+    "tips": [
+      [
+        "VEJA QUEM TEM ACESSO",
+        "Abra as configurações de compartilhamento e confira se o arquivo está restrito a pessoas específicas ou disponível para qualquer pessoa com o link. Escolha a opção mínima necessária para a tarefa."
+      ],
+      [
+        "DEFINA A PERMISSÃO CERTA",
+        "Quem só precisa consultar não deve receber permissão para editar ou reorganizar arquivos. Separe visualização, comentário e edição conforme a necessidade. Isso reduz alterações acidentais e exposição desnecessária."
+      ],
+      [
+        "RETIRE ACESSOS ANTIGOS",
+        "Links enviados para trabalhos concluídos podem continuar ativos. Faça revisões periódicas, remova pessoas que não participam mais e desative links públicos que perderam a finalidade. Documentos sensíveis merecem atenção especial."
+      ],
+      [
+        "EVITE DADOS DESNECESSÁRIOS",
+        "Antes de compartilhar, confira se o arquivo contém documentos, endereços, assinaturas ou informações de terceiros que não precisam aparecer. Crie uma cópia com apenas o conteúdo necessário quando isso for mais seguro."
+      ]
+    ],
+    "cta": "Revise hoje os links compartilhados nas suas contas de nuvem."
+  },
+  {
+    "id": "boleto-falso",
+    "title": "Boleto falso: confira antes de pagar",
+    "hook": "O logotipo pode estar certo e o dinheiro ainda ir para outra pessoa.",
+    "tips": [
+      [
+        "CONFIRA O BENEFICIÁRIO",
+        "No aplicativo do banco, leia o nome e o documento do beneficiário antes de confirmar. Compare essas informações com a empresa ou pessoa que deveria receber. Um boleto visualmente convincente pode ter outros dados de cobrança."
+      ],
+      [
+        "USE O CANAL OFICIAL",
+        "Emita a segunda via pelo aplicativo ou site digitado por você, não por links recebidos em mensagens inesperadas. Se o endereço parecer diferente, pare e procure o atendimento oficial da empresa."
+      ],
+      [
+        "DESCONFIE DE MUDANÇAS",
+        "Uma cobrança com desconto incomum, urgência ou troca repentina de beneficiário merece verificação adicional. Ligue para um contato conhecido e confirme o documento. Não use o telefone informado apenas na mensagem suspeita."
+      ],
+      [
+        "GUARDE O COMPROVANTE",
+        "Depois do pagamento, salve o registro e acompanhe a baixa da cobrança. Se perceber erro ou fraude, contate o banco rapidamente e reúna boleto, conversa e comprovante para explicar o ocorrido."
+      ]
+    ],
+    "cta": "Envie estas verificações a alguém que costuma pagar boletos pelo celular."
+  },
+  {
+    "id": "chaves-acesso",
+    "title": "Chave de acesso pode substituir a senha",
+    "hook": "Seu celular já pode oferecer uma forma de entrar sem digitar senha.",
+    "tips": [
+      [
+        "ENTENDA A PROPOSTA",
+        "Chaves de acesso usam o desbloqueio do aparelho para confirmar sua identidade e podem reduzir golpes que roubam senhas por páginas falsas. A disponibilidade depende do serviço, do dispositivo e da configuração da conta."
+      ],
+      [
+        "CADASTRE EM APARELHO CONFIÁVEL",
+        "Ative o recurso somente em dispositivos protegidos por PIN, biometria ou senha de tela. Evite cadastrar uma chave em aparelhos compartilhados. Leia quais contas e métodos de sincronização participam da configuração."
+      ],
+      [
+        "PLANEJE A RECUPERAÇÃO",
+        "Antes de depender apenas da chave de acesso, revise os meios de recuperação da conta e mantenha contatos atualizados. Entenda como entrar em um aparelho novo ou recuperar acesso caso o dispositivo seja perdido."
+      ],
+      [
+        "NÃO APROVE PEDIDOS ESTRANHOS",
+        "A tecnologia não elimina todos os golpes. Se aparecer uma solicitação de login que você não iniciou, negue e revise a segurança da conta. Nunca compartilhe códigos ou autorize acesso por pressão."
+      ]
+    ],
+    "cta": "Veja quais das suas contas importantes já oferecem chaves de acesso."
+  },
+  {
+    "id": "celular-aquecendo",
+    "title": "Celular aquecendo demais? Investigue",
+    "hook": "Calor excessivo pode ser sinal de uso intenso, ambiente quente ou problema técnico.",
+    "tips": [
+      [
+        "SAIA DO CALOR",
+        "Retire o aparelho do sol, pare tarefas pesadas e leve-o para um local ventilado. Não coloque o celular em geladeira ou água, porque mudanças bruscas e umidade podem causar danos adicionais."
+      ],
+      [
+        "RETIRE O CARREGADOR",
+        "Se o aquecimento ocorrer durante a carga, desconecte o aparelho e verifique cabo, fonte e tomada. Use acessórios compatíveis e em bom estado. Não cubra o celular nem carregue sobre superfícies que retêm calor."
+      ],
+      [
+        "VEJA O QUE ESTÁ CONSUMINDO",
+        "Confira o painel de bateria para identificar aplicativos com atividade intensa em primeiro ou segundo plano. Feche tarefas que não precisa e instale atualizações oficiais. Evite aplicativos que prometem resfriamento milagroso."
+      ],
+      [
+        "PROCURE AVALIAÇÃO SE PERSISTIR",
+        "Interrompa o uso se houver inchaço, cheiro estranho, desligamentos ou calor incomum persistente. Não perfure nem pressione a bateria. Procure assistência qualificada e siga as orientações do fabricante."
+      ]
+    ],
+    "cta": "Salve estas medidas para agir com calma se o aparelho superaquecer."
+  },
+  {
+    "id": "videochamada-falsa",
+    "title": "Nem toda videochamada prova identidade",
+    "hook": "Imagem e voz convincentes também podem ser manipuladas.",
+    "tips": [
+      [
+        "DESCONFIE DO PEDIDO URGENTE",
+        "Uma chamada inesperada que exige dinheiro, senha ou segredo deve ser confirmada. Golpistas podem usar gravações, filtros ou inteligência artificial para imitar pessoas. A aparência sozinha não encerra a verificação."
+      ],
+      [
+        "RETORNE PARA UM CONTATO CONHECIDO",
+        "Encerre a chamada e telefone para um número que já estava salvo. Não use contatos enviados durante a conversa suspeita. Para assuntos financeiros, confirme também com outra pessoa ou canal independente."
+      ],
+      [
+        "OBSERVE SEM DEPENDER DE SINAIS",
+        "Falhas de sincronização e imagem estranha podem levantar suspeita, mas vídeos falsos também podem parecer naturais. Não confie apenas em detalhes visuais; adote sempre um procedimento de confirmação fora da chamada."
+      ],
+      [
+        "COMBINE UM PROCEDIMENTO FAMILIAR",
+        "Defina previamente como a família confirmará pedidos urgentes, por exemplo retornando ao número conhecido e consultando outra pessoa. Evite perguntas baseadas em informações públicas que possam ser descobertas nas redes sociais."
+      ]
+    ],
+    "cta": "Compartilhe para lembrar que pedidos urgentes exigem confirmação independente."
   }
 ]
