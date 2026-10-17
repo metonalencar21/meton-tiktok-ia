@@ -9,6 +9,7 @@ on:
       - 'topics.json'
       - '.github/workflows/gerar-videos.yml'
       - 'requirements.txt'
+      - 'tests/verify_videos.py'
   schedule:
     # Domingos 06:15 em Fortaleza = 09:15 UTC (o GitHub pode atrasar execuções)
     - cron: '15 9 * * 0'
@@ -53,7 +54,8 @@ jobs:
             echo 'Arquivos já gerados nesta semana.'
           else
             git commit -m 'TikTok IA: novos vídeos e manifesto [skip ci]'
-            git push origin HEAD:main
+            git pull --rebase origin main
+          git push origin HEAD:main
           fi
       - name: Resumo da geração
         run: |
