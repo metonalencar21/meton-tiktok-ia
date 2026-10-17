@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Gera vídeos verticais com roteiro original, narração IA e ffmpeg; não publica."""
 import argparse
+from fractions import Fraction
 import datetime as dt
 import json
 import os
@@ -26,7 +27,7 @@ def run(args, **kwargs):
 def probe(path):
     return json.loads(subprocess.check_output(
         ["ffprobe","-v","error","-show_entries",
-         "format=duration:stream=codec_type,codec_name,width,height",
+         "format=duration:stream=codec_type,codec_name,width,height,avg_frame_rate,r_frame_rate",
          "-of","json",str(path)], text=True))
 
 def seconds(path):
@@ -151,8 +152,8 @@ def generate(item, out, voice_mode, overwrite):
     (temp/"slides.ffconcat").write_text("\n".join(playlist)+"\n",encoding="utf-8")
     run(["ffmpeg","-y","-loglevel","error","-safe","0","-f","concat",
          "-i",str(temp/"slides.ffconcat"),"-i",str(temp/"voice.mp3"),
-         "-t",f"{duration+0.95:.3f}","-r","20",
-         "-vf","fps=20,scale=744:1323:flags=lanczos,crop=720:1280:x='12+8*sin(t*0.32)':y='21+9*sin(t*0.21)',format=yuv420p",
+         "-t",f"{duration+0.95:.3f}","-r","30",
+         "-vf","fps=30,scale=744:1323:flags=lanczos,crop=720:1280:x='12+8*sin(t*0.32)':y='21+9*sin(t*0.21)',format=yuv420p",
          "-c:v","libx264","-preset","veryfast","-crf","26",
          "-maxrate","1400k","-bufsize","2800k",
          "-c:a","aac","-b:a","96k","-movflags","+faststart",
@@ -162,6 +163,7 @@ def generate(item, out, voice_mode, overwrite):
     a=[s for s in info["streams"] if s["codec_type"]=="audio"]
     duration=float(info["format"]["duration"])
     if not (len(v)==1 and len(a)==1 and v[0]["codec_name"]=="h264"
+            and Fraction(v[0]["avg_frame_rate"]) == 30
             and v[0]["width"]==720 and v[0]["height"]==1280 and duration>=61):
         raise RuntimeError(f"Arquivo inválido ou curto: {movie} ({duration:.1f}s)")
     shutil.rmtree(temp,ignore_errors=True)
@@ -193,6 +195,22 @@ def main():
         raise RuntimeError("Roteiros inéditos esgotados: adicionar novas pautas originais antes de prosseguir")
     base=Path(opt.out).resolve()
     folder=base/"videos"/iso
+    # Corrige também lotes antigos já enviados ao planejador.
+    for old in base.glob("videos/*/*.mp4"):
+        streams = probe(old)["streams"]
+        video = next(s for s in streams if s["codec_type"] == "video")
+        if Fraction(video["avg_frame_rate"]) == 30:
+            continue
+        fixed = old.with_name(old.stem + ".repair.mp4")
+        run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(old),
+             "-vf", "fps=30,format=yuv420p", "-r", "30",
+             "-c:v", "libx264", "-preset", "veryfast", "-crf", "23",
+             "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart", str(fixed)])
+        check = next(s for s in probe(fixed)["streams"] if s["codec_type"] == "video")
+        if Fraction(check["avg_frame_rate"]) != 30:
+            raise RuntimeError(f"Taxa inválida: {fixed}")
+        fixed.replace(old)
+        print("CORRIGIDO 30 FPS", old, flush=True)
     entries=[]
     for i,item in enumerate(selected):
         clip=generate(item,folder,opt.voice,opt.overwrite)
