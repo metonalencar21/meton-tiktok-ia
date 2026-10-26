@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/produce.py'
+      - 'scripts/visual_bplus.py'
       - 'topics.json'
       - '.github/workflows/gerar-videos.yml'
       - 'requirements.txt'
