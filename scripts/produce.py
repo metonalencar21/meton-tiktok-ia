@@ -143,21 +143,10 @@ def generate(item, out, voice_mode, overwrite):
     total=sum(weights)
     lengths=[max(3.0,duration*w/total) for w in weights]
     lengths[-1]+=max(0,duration-sum(lengths))+0.95
-    playlist=["ffconcat version 1.0"]
-    for i,scene in enumerate(scenes):
-        png=temp/f"{i:02d}.png"
-        card(png,item,scene,i,len(scenes))
-        playlist += [f"file '{png.as_posix()}'",f"duration {lengths[i]:.3f}"]
-    playlist.append(f"file '{(temp/f'{len(scenes)-1:02d}.png').as_posix()}'")
-    (temp/"slides.ffconcat").write_text("\n".join(playlist)+"\n",encoding="utf-8")
-    run(["ffmpeg","-y","-loglevel","error","-safe","0","-f","concat",
-         "-i",str(temp/"slides.ffconcat"),"-i",str(temp/"voice.mp3"),
-         "-t",f"{duration+0.95:.3f}","-r","30",
-         "-vf","fps=30,scale=744:1323:flags=lanczos,crop=720:1280:x='12+8*sin(t*0.32)':y='21+9*sin(t*0.21)',format=yuv420p",
-         "-c:v","libx264","-preset","veryfast","-crf","26",
-         "-maxrate","1400k","-bufsize","2800k",
-         "-c:a","aac","-b:a","96k","-movflags","+faststart",
-         "-metadata","title="+item["title"],str(movie)])
+    # Renderização B+: mascote NEXO em movimento, cenas e legendas dinâmicas.
+    # O áudio é preservado, e toda animação é gerada em Python/Pillow + ffmpeg.
+    from visual_bplus import render_video
+    visual=render_video(scenes,temp/"voice.mp3",movie,duration)
     info=probe(movie)
     v=[s for s in info["streams"] if s["codec_type"]=="video"]
     a=[s for s in info["streams"] if s["codec_type"]=="audio"]
@@ -167,7 +156,7 @@ def generate(item, out, voice_mode, overwrite):
             and v[0]["width"]==720 and v[0]["height"]==1280 and duration>=61):
         raise RuntimeError(f"Arquivo inválido ou curto: {movie} ({duration:.1f}s)")
     shutil.rmtree(temp,ignore_errors=True)
-    return {"name":movie.name,"duration":duration,"voice":voice}
+    return {"name":movie.name,"duration":duration,"voice":voice,"visual_format":visual["visual_format"],"segments":visual["segments"]}
 
 def nearest_monday(date):
     return date+dt.timedelta(days=(-date.weekday())%7)
@@ -222,6 +211,7 @@ def main():
               "publication_date":date_time,"timezone":"America/Fortaleza",
               "caption":caption,"ai_generated":True,"privacyOption":"PUBLIC_TO_EVERYONE",
               "duration_s":round(clip["duration"],1),"voice_engine":clip["voice"],
+              "visual_format":clip.get("visual_format","anterior"),"animated_segments":clip.get("segments",0),
               "quality_review_required":True,"published":False}
         if opt.repo:
             data["media_url"]=f"https://raw.githubusercontent.com/{opt.repo}/main/public/{path}"
