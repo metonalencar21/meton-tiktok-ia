@@ -29,12 +29,12 @@ jobs:
       - name: Instalar bibliotecas e utilitários
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq ffmpeg espeak fonts-dejavu-core
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
           python -m pip install --disable-pip-version-check -r requirements.txt
       - name: Validar roteiros
         run: python tests/test_bank.py
       - name: Produzir vídeos verticais 100% IA
-        run: python scripts/produce.py --count 4 --voice auto --overwrite --repo "$GITHUB_REPOSITORY" --out public
+        run: python scripts/produce.py --count 4 --voice edge --overwrite --repo "$GITHUB_REPOSITORY" --out public
       - name: Verificar duração, formato e áudio
         run: python tests/verify_videos.py
       - name: Guardar vídeos públicos e manifesto
