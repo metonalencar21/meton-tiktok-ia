@@ -1,27 +1,27 @@
-name: Piloto narrado - validar antes de publicar
+name: Piloto v2 - historia visual antes de publicar
 
 on:
   workflow_dispatch:
   push:
     branches: [main]
     paths:
+      - 'scripts/story_pilot.py'
       - 'scripts/produce.py'
-      - 'scripts/visual_bplus.py'
       - '.github/workflows/testar-piloto.yml'
 
 permissions:
   contents: write
 
 concurrency:
-  group: meton-piloto
+  group: meton-piloto-v2
   cancel-in-progress: false
 
 jobs:
   piloto:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
-      - name: Obter repositório
+      - name: Obter repositorio
         uses: actions/checkout@v4
         with:
           persist-credentials: true
@@ -29,65 +29,58 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Instalar ferramentas
+      - name: Preparar dependencias gratuitas
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq ffmpeg espeak fonts-dejavu-core
-          python -m pip install -r requirements.txt
-      - name: Validar fontes e animação local
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
+          python -m pip install --disable-pip-version-check -r requirements.txt
+      - name: Validar codigo e conteudo
         run: |
           python -m compileall -q scripts tests
           python tests/test_bank.py
-          python -m tests.test_bplus
-      - name: Gerar um vídeo completo com voz neural
+      - name: Gerar piloto completo com cenas especificas
         run: |
-          python scripts/produce.py --week-date 2026-11-02 --count 1 --voice edge --overwrite --out public/pilot_preview
-      - name: Verificar piloto e preparar prévia sem agendamento
+          python scripts/story_pilot.py --output public/pilotos/historia-voz-clonada-v2.mp4
+      - name: Validar video de revisao
         run: |
           python - <<'PY'
-          import json, shutil, subprocess
+          import json, subprocess
           from pathlib import Path
-          m=json.loads(Path('public/pilot_preview/manifest.json').read_text(encoding='utf-8'))
-          assert len(m['videos'])==1
-          v=m['videos'][0]
-          assert v['voice_engine']=='edge-tts', v
-          assert v['duration_s']>=70, v
-          assert v['audio_review_status']=='pending_human_review'
-          assert v['quality_review_required'] and not v['published']
-          src=Path('public/pilot_preview')/v['file']
-          assert src.exists() and src.stat().st_size>100_000
-          dst=Path('public/pilotos/voz-falsa-piloto.mp4')
-          dst.parent.mkdir(parents=True, exist_ok=True)
-          shutil.copy2(src,dst)
-          (dst.parent/'piloto.json').write_text(json.dumps({
-              'title':v['title'],'duration_s':v['duration_s'],
-              'voice_engine':v['voice_engine'],'visual_format':v['visual_format'],
-              'review_required':True,'published':False
-          },ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-          print('PILOTO PRONTO SEM PUBLICAR',dst,src.stat().st_size)
+          p=Path("public/pilotos/historia-voz-clonada-v2.mp4")
+          m=json.loads(p.with_suffix(".json").read_text(encoding="utf-8"))
+          assert p.is_file() and p.stat().st_size>100000
+          assert m["scenes"]==8
+          assert m["voice_engine"]=="edge-tts"
+          assert 70<=m["duration_s"]<=120
+          assert m["animated"] and m["quality_review_required"]
+          assert not m["approved"] and not m["published"]
+          v=json.loads(subprocess.check_output([
+            "ffprobe","-v","error","-show_entries",
+            "format=duration:stream=codec_type,codec_name,width,height,avg_frame_rate",
+            "-of","json",str(p)]))
+          assert len(v["streams"])==2
+          print("PILOTO 2 VALIDADO",m["duration_s"],"segundos",p.stat().st_size,"bytes")
           PY
-      - name: Disponibilizar prévia nos artefatos da execução
+      - name: Armazenar artefato de avaliacao
         uses: actions/upload-artifact@v4
         with:
-          name: piloto-voz-neural
+          name: historia-voz-clonada-v2
           path: |
-            public/pilotos/voz-falsa-piloto.mp4
-            public/pilotos/piloto.json
-          retention-days: 7
+            public/pilotos/historia-voz-clonada-v2.mp4
+            public/pilotos/historia-voz-clonada-v2.json
+          retention-days: 14
           if-no-files-found: error
-      - name: Salvar prévia no GitHub (não no TikTok)
+      - name: Salvar piloto no GitHub sem publicar
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git fetch origin main
           if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
-            echo "::warning::Há novas alterações; vídeo está disponível no artefato desta execução, sem sobrescrever a branch."
+            echo "::warning::Houve nova alteracao; piloto disponivel no artefato, sem sobrescrever repositorio."
             exit 0
           fi
-          git add public/pilotos/
-          if git diff --cached --quiet; then
-            echo 'Prévia já atualizada.'
-          else
-            git commit -m 'Piloto: vídeo de avaliação de voz e cenas [skip ci]'
+          git add public/pilotos/historia-voz-clonada-v2.mp4 public/pilotos/historia-voz-clonada-v2.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Piloto v2 com encenacao e voz neural [skip ci]'
             git push origin HEAD:main
           fi
