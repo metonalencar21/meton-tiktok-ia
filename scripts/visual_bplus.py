@@ -153,7 +153,7 @@ def render_video(scenes,voice_file,target,duration,crf=27):
          "-vf","fps=30,scale=720:1280:flags=lanczos,format=yuv420p",
          "-c:v","libx264","-preset","veryfast","-crf",str(crf),
          "-maxrate","1500k","-bufsize","3000k",
-         "-c:a","aac","-b:a","96k","-movflags","+faststart",
+         "-c:a","aac","-b:a","160k","-movflags","+faststart",
          str(target)]
     process=subprocess.Popen(cmd,stdin=subprocess.PIPE)
     try:
