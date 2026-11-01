@@ -1,0 +1,33 @@
+name: Capturar quadros do piloto 3D para revisão
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/preview-piloto-3d.yml'
+
+permissions:
+  contents: write
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gerar imagem de inspeção do vídeo real
+        run: |
+          ffmpeg -y -loglevel error \
+            -i public/pilotos/piloto-3d-blender-animado.mp4 \
+            -vf 'fps=1/3,scale=180:320:flags=lanczos,tile=2x2' \
+            -frames:v 1 -q:v 5 public/pilotos/piloto-3d-preview.jpg
+          file public/pilotos/piloto-3d-preview.jpg
+      - name: Preservar quadros
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/pilotos/piloto-3d-preview.jpg
+          if ! git diff --cached --quiet; then
+            git commit -m 'TikTok IA: quadros de inspeção do piloto 3D [skip ci]'
+            git push origin HEAD:main
+          fi
