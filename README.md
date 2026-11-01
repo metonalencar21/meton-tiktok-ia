@@ -2,6 +2,13 @@
 
 Projeto de vídeos educativos originais, sem uso de imagem ou voz real do titular, gerados com ferramentas gratuitas no GitHub Actions.
 
+## Rejeição do formato publicado (01/11/2026)
+- O usuário verificou que o post publicado sobre Wi-Fi público ainda era um slide narrado e rejeitou tanto esse modelo quanto mudanças cosméticas de ícones e robôs pequenos. Metadados B+ e testes de codec não comprovam valor criativo.
+- O modelo novo exige HISTÓRIA VISUAL: encenação da situação, elementos e pessoas/personagens que ajam na tela, enquadramentos distintos e cortes visuais frequentes, legendas breves e ligação direta entre fala e cena.
+- NÃO agendar novos vídeos automaticamente até o usuário avaliar um piloto audiovisual realmente melhor. No Metricool, 01/11/2026, `Mais espaço sem apagar memórias` foi colocado em rascunho, autoPublish=false.
+- A publicação do Metricool usa uma cópia da mídia enviada quando agendada; mudar `public/` no GitHub não substitui essa cópia. Necessário revisar a mídia do POST real antes de publicar.
+- Prototipagem experimental fora do agendador; piloto ilustrativo de cenas com duas redes, atendente, configuração e personagem criado em 01/11/2026. Não apresentar o piloto como vídeo cinematográfico ou aprovado.
+
 ## Identidade visual B+ (26/10/2026)
 - Mascote digital oficial: **NEXO** (robô expressivo, neutro e amigável, rosa neon + turquesa sobre azul-marinho).
 - Renderizador: `scripts/visual_bplus.py`; animações contínuas da mascote, olhos, boca e ícones ilustrados.
