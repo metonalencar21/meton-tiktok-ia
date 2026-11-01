@@ -19,6 +19,12 @@ Projeto de vídeos educativos originais, sem uso de imagem ou voz real do titula
 - Não alterar mídia já copiada e programada no Metricool; para próximas semanas, validar o manifesto `visual_format` e `animated_segments` antes de agendar. O campo `quality_review_required=true` exige avaliação de qualidade.
 
 
+## Duração e potencial de monetização (01/11/2026)
+- Objetivo editorial: cerca de 75 a 110 segundos de conteúdo real e envolvente, com início forte, dicas contextualizadas e encerramento conciso. Não alongar artificialmente.
+- Regra técnica: nunca aceitar áudio nem vídeo com menos de 70 segundos; 70s é margem interna acima da exigência do TikTok de mais de um minuto. Marcar vídeos acima de 110s para revisão de retenção, sem truncar informação.
+- Duração **não garante monetização**. O Programa de Recompensas do Criador exige originalidade, qualidade, elegibilidade da conta e visualizações qualificadas; a aceitação definitiva é decidida pelo TikTok.
+- Narração inteligível e história visual são condições de revisão obrigatória. Manter rascunhos sem publicação automática até aprovação do piloto.
+
 ## Automação
 - GitHub Actions gera quatro MP4 verticais H.264/AAC, com narração sintética, todos os domingos às 06h15 de Fortaleza (09h15 UTC).
 - As mídias são salvas em public/videos/ANO-WNN/, e o arquivo public/manifest.json fornece título, legenda, data e URL da mídia.
