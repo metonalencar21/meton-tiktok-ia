@@ -1,5 +1,7 @@
 # TikTok IA — @metonalencar
 
+> **STATUS CRIATIVO — 01/11/2026: PRODUÇÃO SEMANAL SUSPENSA.** O usuário reafirmou que a identidade oficial é a **personagem feminina estilizada em 3D**, de cabelo comprido e moletom preto/rosa, com cenas ilustradas vivas e estética neon, conforme a imagem de identidade do canal. Robô 2D NEXO, telas com ícones e slides narrados **não são a proposta aprovada**. Leia [docs/DIRECAO_CRIATIVA.md](docs/DIRECAO_CRIATIVA.md). O gerador atual ainda não reproduz essa identidade e deve ser usado somente para testes manuais. Novos agendamentos e publicações dependem da aprovação visual do piloto.
+
 Projeto de vídeos educativos originais, sem uso de imagem ou voz real do titular, gerados com ferramentas gratuitas no GitHub Actions.
 
 ## Rejeição do formato publicado (01/11/2026)
@@ -16,8 +18,8 @@ Projeto de vídeos educativos originais, sem uso de imagem ou voz real do titula
 - A falha de `edge-tts` era sintaxe de argumento negativo: usar `--rate=-12%` em vez de `--rate -12%`. A falha histórica de gravação foi conflito de rebase de arquivos MP4; o gerador atual evita esse rebase.
 - Não há postagem automática: piloto salvo somente no GitHub. O rascunho no Metricool continua desativado até aprovação de qualidade.
 
-## Identidade visual B+ (26/10/2026)
-- Mascote digital oficial: **NEXO** (robô expressivo, neutro e amigável, rosa neon + turquesa sobre azul-marinho).
+## Histórico do experimento B+ 2D (rejeitado em 01/11/2026)
+- **OBS.: esta versão foi rejeitada.** O robô NEXO 2D não é a personagem oficial. A referência atual é a personagem feminina estilizada em 3D descrita na direção criativa.
 - Renderizador: `scripts/visual_bplus.py`; animações contínuas da mascote, olhos, boca e ícones ilustrados.
 - Textos na tela são legendas curtas e mudam entre frases narradas; o vídeo não deve ficar em slides estáticos.
 - Estética: vídeo vertical com cenas temáticas, contraste legível e movimentos frequentes. A marca continua `METON DIGITAL` e @metonalencar.
@@ -33,9 +35,9 @@ Projeto de vídeos educativos originais, sem uso de imagem ou voz real do titula
 - Narração inteligível e história visual são condições de revisão obrigatória. Manter rascunhos sem publicação automática até aprovação do piloto.
 
 ## Automação
-- GitHub Actions gera quatro MP4 verticais H.264/AAC, com narração sintética, todos os domingos às 06h15 de Fortaleza (09h15 UTC).
+- **Pausado em 01/11/2026:** o agendamento do GitHub Actions foi desativado. O fluxo só funciona por acionamento manual para testes; não deve voltar ao cron sem aprovação do novo piloto 3D.
 - As mídias são salvas em public/videos/ANO-WNN/, e o arquivo public/manifest.json fornece título, legenda, data e URL da mídia.
-- A rotina ChatGPT + Metricool tenta agendar os quatro vídeos semanalmente, após verificar arquivos, data, originalidade, limite gratuito e duplicação.
+- A rotina ChatGPT + Metricool permanece em modo de acompanhamento e **não deve agendar nem publicar novos vídeos até aprovação do novo formato visual**.
 - O gerador não publica no TikTok sozinho. Agendamento é confirmado somente quando o Metricool responder com êxito.
 - Horários iniciais: terça 18h, quinta 10h, sábado 10h e domingo 18h, em Fortaleza.
 
