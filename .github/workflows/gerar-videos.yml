@@ -2,15 +2,6 @@ name: Gerar videos TikTok IA (gratuito)
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'scripts/produce.py'
-      - 'scripts/visual_bplus.py'
-      - 'topics.json'
-      - '.github/workflows/gerar-videos.yml'
-      - 'requirements.txt'
-      - 'tests/verify_videos.py'
   schedule:
     # Domingos 06:15 em Fortaleza = 09:15 UTC (o GitHub pode atrasar execuções)
     - cron: '15 9 * * 0'
@@ -50,13 +41,19 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          # A mesma semana pode ter sido gerada em outra execução:
+          # nunca tente rebase automático de MP4 binários.
+          git fetch origin main
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            echo "::warning::O repositório mudou durante a geração; não sobrescrever vídeos de outra execução."
+            exit 0
+          fi
           git add public/
           if git diff --cached --quiet; then
             echo 'Arquivos já gerados nesta semana.'
           else
             git commit -m 'TikTok IA: novos vídeos e manifesto [skip ci]'
-            git pull --rebase origin main
-          git push origin HEAD:main
+            git push origin HEAD:main
           fi
       - name: Resumo da geração
         run: |
