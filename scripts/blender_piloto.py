@@ -102,7 +102,8 @@ def key(ob,prop,at,values):
   elif prop=="rotation_euler": ob.rotation_euler=value
   elif prop=="scale": ob.scale=value
   elif prop=="lens": ob.data.ortho_scale=value
-  ob.keyframe_insert(data_path=("ortho_scale" if prop=="lens" else prop),frame=fr)
+  if prop=="lens": ob.data.keyframe_insert(data_path="ortho_scale",frame=fr)
+  else: ob.keyframe_insert(data_path=prop,frame=fr)
 def point_cam(cam,pt):
  direction=Vector(pt)-cam.location
  cam.rotation_euler=direction.to_track_quat("-Z","Y").to_euler()
