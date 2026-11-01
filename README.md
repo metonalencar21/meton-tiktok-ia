@@ -5,7 +5,7 @@ Projeto de vídeos educativos originais, sem uso de imagem ou voz real do titula
 ## Rejeição do formato publicado (01/11/2026)
 - O usuário verificou que o post publicado sobre Wi-Fi público ainda era um slide narrado e rejeitou tanto esse modelo quanto mudanças cosméticas de ícones e robôs pequenos. Metadados B+ e testes de codec não comprovam valor criativo.
 - O modelo novo exige HISTÓRIA VISUAL: encenação da situação, elementos e pessoas/personagens que ajam na tela, enquadramentos distintos e cortes visuais frequentes, legendas breves e ligação direta entre fala e cena.
-- NÃO agendar novos vídeos automaticamente até o usuário avaliar um piloto audiovisual realmente melhor. No Metricool, 01/11/2026, `Mais espaço sem apagar memórias` foi colocado em rascunho, autoPublish=false.
+- NÃO agendar novos vídeos automaticamente até o usuário avaliar um piloto audiovisual realmente melhor. No Metricool, 01/11/2026, `Mais espaço sem apagar memórias` foi colocado em rascunho, autoPublish=false. A inteligibilidade da narração é condição de aprovação, não basta MP4 com áudio válido.
 - A publicação do Metricool usa uma cópia da mídia enviada quando agendada; mudar `public/` no GitHub não substitui essa cópia. Necessário revisar a mídia do POST real antes de publicar.
 - Prototipagem experimental fora do agendador; piloto ilustrativo de cenas com duas redes, atendente, configuração e personagem criado em 01/11/2026. Não apresentar o piloto como vídeo cinematográfico ou aprovado.
 
@@ -14,7 +14,7 @@ Projeto de vídeos educativos originais, sem uso de imagem ou voz real do titula
 - Renderizador: `scripts/visual_bplus.py`; animações contínuas da mascote, olhos, boca e ícones ilustrados.
 - Textos na tela são legendas curtas e mudam entre frases narradas; o vídeo não deve ficar em slides estáticos.
 - Estética: vídeo vertical com cenas temáticas, contraste legível e movimentos frequentes. A marca continua `METON DIGITAL` e @metonalencar.
-- O piloto curto foi testado localmente; a rotina automática roda a validação `Validar piloto B+ NEXO` e gera a nova versão a partir de `scripts/produce.py`.
+- O piloto curto foi testado localmente; a rotina automática roda a validação `Validar piloto B+ NEXO` e gera a nova versão a partir de `scripts/produce.py`. A versão com a nova voz ainda precisa de escuta real.
 - **Este renderizador é 2D programático e gratuito, não um serviço de vídeo generativo cinematográfico ou lip sync realista.** A boca acompanha ritmo aproximado, não fonemas exatos.
 - Não alterar mídia já copiada e programada no Metricool; para próximas semanas, validar o manifesto `visual_format` e `animated_segments` antes de agendar. O campo `quality_review_required=true` exige avaliação de qualidade.
 
@@ -33,7 +33,7 @@ Projeto de vídeos educativos originais, sem uso de imagem ou voz real do titula
 4. Se houver erro de gravação: Settings > Actions > General > Workflow permissions > Read and write permissions.
 
 ## Fontes
-- scripts/produce.py: orquestra voz sintética (Edge TTS, gTTS ou fallback eSpeak) e o renderizador B+.
+- scripts/produce.py: exige voz neural Edge TTS em português do Brasil (Francisca), a -12% de velocidade, com pausas reais entre blocos e volume normalizado. Não há fallback gTTS/eSpeak: se falhar, não há vídeo novo.
 - scripts/visual_bplus.py: mascote NEXO, desenhos temáticos animados e legendas dinâmicas.
 - topics.json: 24 roteiros educativos originais para seis semanas; novas pautas são necessárias depois.
 - tests/test_bank.py e tests/verify_videos.py: validações automáticas de roteiros e mídia.
