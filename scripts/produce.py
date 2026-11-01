@@ -117,7 +117,7 @@ def make_voice(text, audio_path, mode):
             wav = audio_path.parent / f"speech_{i:02d}.wav"
             run(["edge-tts",
                  "--voice", "pt-BR-FranciscaNeural",
-                 "--rate", "-12%",
+                 "--rate=-12%",
                  "--text", part,
                  "--write-media", str(chunk)],
                 stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, timeout=120)
