@@ -19,4 +19,6 @@ for obj in manifest["videos"]:
     assert vs[0]["width"]==720 and vs[0]["height"]==1280
     assert float(data["format"]["duration"])>=61
     assert obj["ai_generated"] and obj["quality_review_required"]
+    assert obj["voice_engine"] == "edge-tts", "Voz neural pt-BR obrigatória"
+    assert obj.get("audio_review_status") == "pending_human_review", "Narração exige escuta antes de publicar"
     print("VALIDADO",p.name)
