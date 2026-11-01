@@ -9,6 +9,13 @@ Projeto de vídeos educativos originais, sem uso de imagem ou voz real do titula
 - A publicação do Metricool usa uma cópia da mídia enviada quando agendada; mudar `public/` no GitHub não substitui essa cópia. Necessário revisar a mídia do POST real antes de publicar.
 - Prototipagem experimental fora do agendador; piloto ilustrativo de cenas com duas redes, atendente, configuração e personagem criado em 01/11/2026. Não apresentar o piloto como vídeo cinematográfico ou aprovado.
 
+## Piloto funcional com voz neural (01/11/2026)
+- Primeira geração integrada validada no GitHub Actions: [execução 41311957813](https://github.com/metonalencar21/meton-tiktok-ia/actions/runs/41311957813).
+- Vídeo para escuta e avaliação: [Cuidado com a voz clonada — piloto](https://github.com/metonalencar21/meton-tiktok-ia/blob/main/public/pilotos/voz-falsa-piloto.mp4), 84 segundos, Edge TTS pt-BR, voz Francisca.
+- Novo formato técnico: `STORY 2D CENAS HUMANAS`, com personagem ilustrado, encenações de telefone/áudio/Pix e alternância de tomadas. Ainda não é produção cinematográfica; aceitação depende de avaliação humana.
+- A falha de `edge-tts` era sintaxe de argumento negativo: usar `--rate=-12%` em vez de `--rate -12%`. A falha histórica de gravação foi conflito de rebase de arquivos MP4; o gerador atual evita esse rebase.
+- Não há postagem automática: piloto salvo somente no GitHub. O rascunho no Metricool continua desativado até aprovação de qualidade.
+
 ## Identidade visual B+ (26/10/2026)
 - Mascote digital oficial: **NEXO** (robô expressivo, neutro e amigável, rosa neon + turquesa sobre azul-marinho).
 - Renderizador: `scripts/visual_bplus.py`; animações contínuas da mascote, olhos, boca e ícones ilustrados.
