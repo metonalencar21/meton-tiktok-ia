@@ -2,9 +2,8 @@ name: Gerar videos TikTok IA (gratuito)
 
 on:
   workflow_dispatch:
-  schedule:
-    # Domingos 06:15 em Fortaleza = 09:15 UTC (o GitHub pode atrasar execuções)
-    - cron: '15 9 * * 0'
+  # Rotina semanal desativada até aprovação da identidade visual feminina 3D.
+  # Testes: somente workflow_dispatch (manual).
 
 permissions:
   contents: write
