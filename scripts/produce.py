@@ -230,7 +230,8 @@ def main():
         data={"id":iso+"-"+item["id"],"title":item["title"],"file":path,
               "publication_date":date_time,"timezone":"America/Fortaleza",
               "caption":caption,"ai_generated":True,"privacyOption":"PUBLIC_TO_EVERYONE",
-              "duration_s":round(clip["duration"],1),"over_one_minute":clip["duration"]>=70,\n              "retention_review_recommended":clip["duration"]>110,"voice_engine":clip["voice"],"audio_review_status":"pending_human_review",
+              "duration_s":round(clip["duration"],1),"over_one_minute":clip["duration"]>=70,
+              "retention_review_recommended":clip["duration"]>110,"voice_engine":clip["voice"],"audio_review_status":"pending_human_review",
               "visual_format":clip.get("visual_format","anterior"),"animated_segments":clip.get("segments",0),
               "quality_review_required":True,"published":False}
         if opt.repo:
