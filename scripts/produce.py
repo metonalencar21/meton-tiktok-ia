@@ -88,11 +88,11 @@ def card(path, item, scene, index, count):
 
 def build_scenes(item):
     start={"heading":item["title"],"body":item["hook"],
-           "say":item["hook"]+" Neste vídeo, veja quatro cuidados práticos que você pode aplicar agora. São orientações educativas, sem promessas milagrosas nem necessidade de comprar aplicativos."}
+           "say":item["hook"]+" Veja quatro cuidados que fazem diferença na prática."}
     middle=[{"heading":title,"body":speech.split(". ")[0].strip().rstrip(".")+".","say":speech}
             for title,speech in item["tips"]]
     end={"heading":"SALVE E COMPARTILHE","body":item["cta"],
-         "say":item["cta"]+" Acompanhe a página para mais dicas originais sobre tecnologia, privacidade e segurança digital."}
+         "say":item["cta"]}
     return [start]+middle+[end]
 
 def make_voice(text, audio_path, mode):
@@ -139,7 +139,7 @@ def make_voice(text, audio_path, mode):
              "-af", "loudnorm=I=-16:TP=-1.5:LRA=9",
              "-c:a", "libmp3lame", "-b:a", "160k", str(audio_path)],
             stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, timeout=120)
-        if not audio_path.is_file() or seconds(audio_path) < 61:
+        if not audio_path.is_file() or seconds(audio_path) < 70:
             raise RuntimeError("Narração neural insuficiente ou curta; vídeo bloqueado")
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError) as exc:
         audio_path.unlink(missing_ok=True)
@@ -173,7 +173,7 @@ def generate(item, out, voice_mode, overwrite):
     duration=float(info["format"]["duration"])
     if not (len(v)==1 and len(a)==1 and v[0]["codec_name"]=="h264"
             and Fraction(v[0]["avg_frame_rate"]) == 30
-            and v[0]["width"]==720 and v[0]["height"]==1280 and duration>=61):
+            and v[0]["width"]==720 and v[0]["height"]==1280 and duration>=70):
         raise RuntimeError(f"Arquivo inválido ou curto: {movie} ({duration:.1f}s)")
     shutil.rmtree(temp,ignore_errors=True)
     return {"name":movie.name,"duration":duration,"voice":voice,"visual_format":visual["visual_format"],"segments":visual["segments"]}
@@ -230,7 +230,7 @@ def main():
         data={"id":iso+"-"+item["id"],"title":item["title"],"file":path,
               "publication_date":date_time,"timezone":"America/Fortaleza",
               "caption":caption,"ai_generated":True,"privacyOption":"PUBLIC_TO_EVERYONE",
-              "duration_s":round(clip["duration"],1),"voice_engine":clip["voice"],"audio_review_status":"pending_human_review",
+              "duration_s":round(clip["duration"],1),"over_one_minute":clip["duration"]>=70,\n              "retention_review_recommended":clip["duration"]>110,"voice_engine":clip["voice"],"audio_review_status":"pending_human_review",
               "visual_format":clip.get("visual_format","anterior"),"animated_segments":clip.get("segments",0),
               "quality_review_required":True,"published":False}
         if opt.repo:
