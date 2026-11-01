@@ -1,0 +1,13 @@
+{
+  "title": "Cuidado com a voz clonada — história visual v2",
+  "duration_s": 83.9,
+  "voice_engine": "edge-tts",
+  "visual_format": "STORY V2 - ENCENAÇÃO DE MENSAGEM E VERIFICAÇÃO",
+  "scenes": 8,
+  "animated": true,
+  "quality_review_required": true,
+  "approved": false,
+  "published": false,
+  "source": "story_pilot.py",
+  "review_instructions": "Avaliar áudio e clareza de cada cena. Não usar somente teste de codec."
+}
