@@ -96,37 +96,57 @@ def build_scenes(item):
     return [start]+middle+[end]
 
 def make_voice(text, audio_path, mode):
-    # Primeiro, voz neural gratuita (quando o serviço está disponível).
-    if mode in ("auto","edge") and shutil.which("edge-tts"):
-        try:
-            run(["edge-tts","--voice","pt-BR-AntonioNeural","--rate","-6%",
-                "--text",text,"--write-media",str(audio_path)],
-                stdout=subprocess.DEVNULL,stderr=subprocess.PIPE,timeout=120)
-            if audio_path.exists() and audio_path.stat().st_size>1000:
-                return "edge-tts"
-        except (subprocess.CalledProcessError,subprocess.TimeoutExpired) as exc:
-            print("Edge TTS indisponível:",exc,file=sys.stderr)
-            audio_path.unlink(missing_ok=True)
-    if mode=="edge":
-        raise RuntimeError("Edge TTS indisponível, e fallback não autorizado")
-    # Segunda opção: Google Translate TTS, sem chave de API.
-    if mode=="auto":
-        try:
-            from gtts import gTTS
-            gTTS(text=text,lang="pt",tld="com.br",slow=False,lang_check=False,timeout=15).save(str(audio_path))
-            if audio_path.exists() and audio_path.stat().st_size>1000:
-                return "gtts"
-        except Exception as exc:
-            print("gTTS indisponível:",exc,file=sys.stderr)
-            audio_path.unlink(missing_ok=True)
-    # Último recurso: voz local sem conexão. Pode soar robótica.
-    wav=audio_path.with_suffix(".wav")
-    run(["espeak","-v","pt-br","-s","152","-a","160","-w",str(wav),text],
-        stdout=subprocess.DEVNULL)
-    run(["ffmpeg","-y","-loglevel","error","-i",str(wav),
-        "-c:a","libmp3lame","-b:a","96k",str(audio_path)])
-    wav.unlink(missing_ok=True)
-    return "espeak"
+    """Somente voz neural pt-BR, por blocos, com pausas audíveis.
+
+    Falhar é preferível a publicar uma narração robótica ou incompreensível.
+    """
+    if mode not in ("auto", "edge"):
+        raise ValueError("Somente voz neural Edge TTS é permitida")
+    if not shutil.which("edge-tts"):
+        raise RuntimeError("Edge TTS ausente: vídeo bloqueado para revisão, sem fallback de voz")
+
+    parts = [p.strip() for p in text.split("\n\n") if p.strip()]
+    if not parts:
+        raise ValueError("Roteiro sem narração")
+    audio_path.parent.mkdir(parents=True, exist_ok=True)
+    audio_path.unlink(missing_ok=True)
+    wav_files = []
+    try:
+        for i, part in enumerate(parts):
+            chunk = audio_path.parent / f"speech_{i:02d}.mp3"
+            wav = audio_path.parent / f"speech_{i:02d}.wav"
+            run(["edge-tts",
+                 "--voice", "pt-BR-FranciscaNeural",
+                 "--rate", "-12%",
+                 "--text", part,
+                 "--write-media", str(chunk)],
+                stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, timeout=120)
+            if not chunk.is_file() or chunk.stat().st_size <= 1000:
+                raise RuntimeError(f"Narração neural incompleta no bloco {i+1}")
+            # As pausas são silencios REAIS no áudio, não quebras de linha ignoradas pelo TTS.
+            pause = "0.45" if i < len(parts)-1 else "0.15"
+            run(["ffmpeg", "-y", "-loglevel", "error",
+                 "-i", str(chunk), "-af", f"apad=pad_dur={pause}",
+                 "-ar", "44100", "-ac", "1", "-c:a", "pcm_s16le", str(wav)],
+                stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, timeout=120)
+            wav_files.append(wav)
+        playlist = audio_path.parent / "voice_parts.txt"
+        playlist.write_text(
+            "".join(f"file '{path.name}'\n" for path in wav_files),
+            encoding="utf-8")
+        run(["ffmpeg", "-y", "-loglevel", "error",
+             "-f", "concat", "-safe", "0", "-i", str(playlist),
+             "-af", "loudnorm=I=-16:TP=-1.5:LRA=9",
+             "-c:a", "libmp3lame", "-b:a", "160k", str(audio_path)],
+            stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, timeout=120)
+        if not audio_path.is_file() or seconds(audio_path) < 61:
+            raise RuntimeError("Narração neural insuficiente ou curta; vídeo bloqueado")
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError) as exc:
+        audio_path.unlink(missing_ok=True)
+        raise RuntimeError(
+            "Edge TTS falhou: nenhum fallback robótico será usado; vídeo bloqueado"
+        ) from exc
+    return "edge-tts"
 
 def generate(item, out, voice_mode, overwrite):
     out.mkdir(parents=True,exist_ok=True)
@@ -166,7 +186,7 @@ def main():
     p.add_argument("--week-date",default=None)
     p.add_argument("--out",default=str(ROOT/"public"))
     p.add_argument("--count",type=int,default=4)
-    p.add_argument("--voice",choices=["auto","edge","espeak"],default="auto")
+    p.add_argument("--voice",choices=["auto","edge"],default="edge")
     p.add_argument("--repo",default=os.getenv("GITHUB_REPOSITORY",""))
     p.add_argument("--overwrite",action="store_true")
     opt=p.parse_args()
@@ -210,7 +230,7 @@ def main():
         data={"id":iso+"-"+item["id"],"title":item["title"],"file":path,
               "publication_date":date_time,"timezone":"America/Fortaleza",
               "caption":caption,"ai_generated":True,"privacyOption":"PUBLIC_TO_EVERYONE",
-              "duration_s":round(clip["duration"],1),"voice_engine":clip["voice"],
+              "duration_s":round(clip["duration"],1),"voice_engine":clip["voice"],"audio_review_status":"pending_human_review",
               "visual_format":clip.get("visual_format","anterior"),"animated_segments":clip.get("segments",0),
               "quality_review_required":True,"published":False}
         if opt.repo:
