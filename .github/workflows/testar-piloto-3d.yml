@@ -1,0 +1,55 @@
+name: Piloto personagem 3D real com Blender — NÃO PUBLICAR
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/blender_piloto.py'
+      - 'scripts/assemble_piloto_3d.py'
+      - '.github/workflows/testar-piloto-3d.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tiktok-piloto-blender-3d
+  cancel-in-progress: false
+
+jobs:
+  piloto:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Obter código
+        uses: actions/checkout@v4
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Instalar Blender e mídia gratuitos
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq blender ffmpeg espeak fonts-dejavu-core
+          python -m pip install --disable-pip-version-check edge-tts
+      - name: Conferir sintaxe dos scripts
+        run: python -m py_compile scripts/blender_piloto.py scripts/assemble_piloto_3d.py
+      - name: Renderizar e validar atuação tridimensional
+        run: python scripts/assemble_piloto_3d.py
+      - name: Salvar somente piloto sem publicação
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            echo "::error::O branch mudou; piloto gerado mas sem commit. Corrigir o conflito manualmente."
+            exit 1
+          fi
+          git add public/pilotos/piloto-3d-blender-animado.*
+          git diff --cached --quiet && exit 0
+          git commit -m 'TikTok IA: render 3D procedural piloto para revisão [skip ci]'
+          git push origin HEAD:main
+      - name: Conferência
+        run: |
+          echo "## Teste 3D para revisão — NÃO PUBLICAR" >> "$GITHUB_STEP_SUMMARY"
+          cat public/pilotos/piloto-3d-blender-animado.json >> "$GITHUB_STEP_SUMMARY"
