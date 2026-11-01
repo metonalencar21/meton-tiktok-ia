@@ -1,0 +1,93 @@
+name: Piloto narrado - validar antes de publicar
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/produce.py'
+      - 'scripts/visual_bplus.py'
+      - '.github/workflows/testar-piloto.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: meton-piloto
+  cancel-in-progress: false
+
+jobs:
+  piloto:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Obter repositório
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Instalar ferramentas
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak fonts-dejavu-core
+          python -m pip install -r requirements.txt
+      - name: Validar fontes e animação local
+        run: |
+          python -m compileall -q scripts tests
+          python tests/test_bank.py
+          python -m tests.test_bplus
+      - name: Gerar um vídeo completo com voz neural
+        run: |
+          python scripts/produce.py --week-date 2026-11-02 --count 1 --voice edge --overwrite --out public/pilot_preview
+      - name: Verificar piloto e preparar prévia sem agendamento
+        run: |
+          python - <<'PY'
+          import json, shutil, subprocess
+          from pathlib import Path
+          m=json.loads(Path('public/pilot_preview/manifest.json').read_text(encoding='utf-8'))
+          assert len(m['videos'])==1
+          v=m['videos'][0]
+          assert v['voice_engine']=='edge-tts', v
+          assert v['duration_s']>=70, v
+          assert v['audio_review_status']=='pending_human_review'
+          assert v['quality_review_required'] and not v['published']
+          src=Path('public/pilot_preview')/v['file']
+          assert src.exists() and src.stat().st_size>100_000
+          dst=Path('public/pilotos/voz-falsa-piloto.mp4')
+          dst.parent.mkdir(parents=True, exist_ok=True)
+          shutil.copy2(src,dst)
+          (dst.parent/'piloto.json').write_text(json.dumps({
+              'title':v['title'],'duration_s':v['duration_s'],
+              'voice_engine':v['voice_engine'],'visual_format':v['visual_format'],
+              'review_required':True,'published':False
+          },ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PILOTO PRONTO SEM PUBLICAR',dst,src.stat().st_size)
+          PY
+      - name: Disponibilizar prévia nos artefatos da execução
+        uses: actions/upload-artifact@v4
+        with:
+          name: piloto-voz-neural
+          path: |
+            public/pilotos/voz-falsa-piloto.mp4
+            public/pilotos/piloto.json
+          retention-days: 7
+          if-no-files-found: error
+      - name: Salvar prévia no GitHub (não no TikTok)
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            echo "::warning::Há novas alterações; vídeo está disponível no artefato desta execução, sem sobrescrever a branch."
+            exit 0
+          fi
+          git add public/pilotos/
+          if git diff --cached --quiet; then
+            echo 'Prévia já atualizada.'
+          else
+            git commit -m 'Piloto: vídeo de avaliação de voz e cenas [skip ci]'
+            git push origin HEAD:main
+          fi
