@@ -45,8 +45,8 @@ jobs:
           # nunca tente rebase automático de MP4 binários.
           git fetch origin main
           if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
-            echo "::warning::O repositório mudou durante a geração; não sobrescrever vídeos de outra execução."
-            exit 0
+            echo "::error::O repositório mudou durante a geração; vídeos NÃO foram publicados no GitHub. Necessária nova execução."
+            exit 1
           fi
           git add public/
           if git diff --cached --quiet; then
