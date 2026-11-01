@@ -21,5 +21,7 @@ for obj in manifest["videos"]:
     assert obj["ai_generated"] and obj["quality_review_required"]
     assert obj.get("over_one_minute") is True, "Tempo mínimo para vídeo longo não atendido"
     assert obj["voice_engine"] == "edge-tts", "Voz neural pt-BR obrigatória"
+    assert obj.get("visual_format") == "STORY 2D CENAS HUMANAS", "Visual antigo rejeitado"
+    assert obj.get("animated_segments",0)>=12, "Poucos cortes narrativos"
     assert obj.get("audio_review_status") == "pending_human_review", "Narração exige escuta antes de publicar"
     print("VALIDADO",p.name)
