@@ -1,0 +1,14 @@
+{
+  "title": "Teste Wi-Fi: personagem 3D real (Blender)",
+  "account": "@metonalencar",
+  "duration_s": 15.3,
+  "voice_engine": "edge-tts",
+  "render_engine": "Blender Workbench 3D CPU",
+  "geometry_3d": true,
+  "movement_3d": true,
+  "approved": false,
+  "published": false,
+  "format": "720x1280 H264 AAC 30fps",
+  "quality_note": "Geometria 3D procedural simplificada: não corresponde ainda ao acabamento cinematográfico da referência enviada; avaliar rosto, gestos e ações.",
+  "instructions": "Não publicar nem agendar. É apenas teste de viabilidade."
+}
