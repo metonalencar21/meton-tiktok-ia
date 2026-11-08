@@ -3,6 +3,14 @@
 ## Identidade oficial
 A referência permanece docs/DIRECAO_CRIATIVA.md: personagem feminina em CGI 3D, cabelos castanhos longos, olhos expressivos, moletom preto com detalhes rosa, ambientes tecnológicos neon. Slides, NEXO 2D e boneco geométrico foram rejeitados.
 
+## Novo episódio completo — 08/11/2026
+- Criado e validado: public/pilotos/piloto_pix_completo_3d_visual.mp4, **95,3 segundos**, 720×1280, H.264/AAC, voz Edge TTS pt-BR Francisca, 11 cenas com seis fotografias CGI distintas e elementos de celular animados.
+- Script: scripts/piloto_pix_completo.py; relatório: public/pilotos/piloto_pix_completo_3d_visual.json.
+- Inspeção distribuída em oito quadros reais: public/pilotos/piloto_pix_completo_preview.jpg.
+- A biblioteca agora inclui **oito imagens CGI** em public/assets: mestre, pix-alerta, ligação, bloqueio, resolução, senhas, permissões e backup.
+- A geração por GitHub Actions foi concluída com sucesso sem cobrança e sem postagem. Metadados approved=false e published=false.
+- **Atenção:** bom avanço na fidelidade da personagem, mas as cenas ainda usam CGI 2.5D; não é vídeo com corpo articulado e sincronização labial profissional, e não foi aprovado visualmente pelo usuário.
+
 ## Mudanças concluídas nesta etapa
 - Ativos CGI reutilizáveis no GitHub: public/assets/personagem-mestre.jpg e public/assets/personagem-pix-alerta.jpg.
 - Renderer de teste: scripts/piloto_visual_personagem.py, com cenas alternadas, interface de celular em movimento, alertas, legenda curta, microdeformação de boca, voz neural Edge TTS em português e montagem automática via FFmpeg.
