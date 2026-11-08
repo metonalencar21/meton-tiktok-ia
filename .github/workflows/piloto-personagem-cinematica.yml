@@ -1,0 +1,56 @@
+name: Validar piloto cinematografico da personagem feminina
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/piloto_visual_personagem.py'
+      - 'public/assets/personagem-mestre.jpg'
+      - 'public/assets/personagem-pix-alerta.jpg'
+      - '.github/workflows/piloto-personagem-cinematica.yml'
+
+permissions:
+  contents: write
+concurrency:
+  group: tiktok-piloto-personagem-cinematica
+  cancel-in-progress: false
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Instalar ferramentas gratuitas
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
+          python -m pip install --disable-pip-version-check Pillow numpy opencv-python-headless edge-tts
+      - name: Conferir fontes visuais
+        run: |
+          test -s public/assets/personagem-mestre.jpg
+          test -s public/assets/personagem-pix-alerta.jpg
+          python -m py_compile scripts/piloto_visual_personagem.py
+      - name: Gerar piloto sem publicar
+        run: python scripts/piloto_visual_personagem.py
+      - name: Salvar teste na pasta de pilotos
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            echo "::error::O repositório mudou durante a geração. Não sobrescrever MP4s."
+            exit 1
+          fi
+          git add public/pilotos/piloto_personagem_cinematica.mp4 public/pilotos/piloto_personagem_cinematica.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'TikTok IA: guardar piloto visual CGI para avaliação [skip ci]'
+            git push origin HEAD:main
+          fi
+      - name: Aviso de status
+        run: |
+          echo 'Piloto gerado somente para avaliação. Nenhuma publicação ou agendamento automático foi realizado.' >> "$GITHUB_STEP_SUMMARY"
