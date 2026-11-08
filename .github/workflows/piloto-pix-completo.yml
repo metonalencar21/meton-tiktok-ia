@@ -1,0 +1,60 @@
+name: Piloto Pix completo CGI (+60s) para avaliacao
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/piloto_pix_completo.py'
+      - '.github/workflows/piloto-pix-completo.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tiktok-piloto-pix-completo
+  cancel-in-progress: false
+
+jobs:
+  produzir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Instalar ferramentas gratuitas
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
+          python -m pip install --disable-pip-version-check Pillow numpy opencv-python-headless edge-tts
+      - name: Verificar cenas e roteiro
+        run: |
+          test -s public/assets/personagem-mestre.jpg
+          test -s public/assets/personagem-pix-alerta.jpg
+          test -s public/assets/personagem-bloqueio.jpg
+          test -s public/assets/personagem-ligacao.jpg
+          test -s public/assets/personagem-resolucao.jpg
+          test -s public/assets/personagem-senhas.jpg
+          python -m py_compile scripts/piloto_pix_completo.py
+      - name: Criar video narrativo CGI, voz pt-BR e cortes
+        run: python scripts/piloto_pix_completo.py
+      - name: Guardar apenas piloto sem publicacao
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            echo "::error::Branch mudou durante a renderização; não sobrescrever vídeo."
+            exit 1
+          fi
+          git add public/pilotos/piloto_pix_completo_3d_visual.mp4 public/pilotos/piloto_pix_completo_3d_visual.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'TikTok IA: guardar episodio piloto Pix CGI >60s [skip ci]'
+            git push origin HEAD:main
+          fi
+      - name: Relatar resultado
+        run: |
+          echo 'Piloto de revisão gerado. NENHUM POST FOI AGENDADO OU PUBLICADO.' >> "$GITHUB_STEP_SUMMARY"
+          cat public/pilotos/piloto_pix_completo_3d_visual.json >> "$GITHUB_STEP_SUMMARY"
