@@ -1,0 +1,32 @@
+name: Revisar quadros do episodio Pix completo
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/preview-pix-completo.yml']
+permissions: {contents: write}
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar FFmpeg
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+      - name: Capturar oito quadros espaçados do MP4 real
+        run: |
+          ffmpeg -y -loglevel error -i public/pilotos/piloto_pix_completo_3d_visual.mp4 \
+            -vf 'fps=1/12,scale=270:480:flags=lanczos,tile=4x2' \
+            -frames:v 1 -q:v 5 public/pilotos/piloto_pix_completo_preview.jpg
+          test -s public/pilotos/piloto_pix_completo_preview.jpg
+      - name: Salvar inspeção
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/pilotos/piloto_pix_completo_preview.jpg
+          if ! git diff --cached --quiet; then
+            git commit -m 'TikTok IA: oito quadros reais de inspeção do Pix completo [skip ci]'
+            git push origin HEAD:main
+          fi
