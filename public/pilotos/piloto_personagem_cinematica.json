@@ -1,0 +1,17 @@
+{
+  "title": "Pix urgente — piloto visual da personagem feminina",
+  "visual_format": "PERSONAGEM_CGI_2_5D_V1",
+  "rigged_3d": false,
+  "user_approved": false,
+  "published": false,
+  "auto_publish": false,
+  "voice_engine": "Edge TTS pt-BR Francisca",
+  "duration_s": 17.6,
+  "script": "Recebeu um pedido de Pix urgente? Para agora. Foto conhecida não é prova de identidade. Antes de transferir dinheiro, ligue para o contato que você já tinha salvo. Confirme com a pessoa por outro caminho. Salva esta dica e compartilha com a família.",
+  "status": "review_only",
+  "source_images": [
+    "public/assets/personagem-mestre.jpg",
+    "public/assets/personagem-pix-alerta.jpg"
+  ],
+  "note": "Imagens CGI em 2.5D com telas animadas; NÃO confundir com animação 3D completa."
+}
