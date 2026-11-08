@@ -1,0 +1,33 @@
+name: Importar unica cena CGI da mascote para armazenamento local
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/importar-cena-personagem.yml'
+permissions:
+  contents: write
+jobs:
+  salvar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copiar cena renderizada para o proprio repositorio
+        env:
+          ASSET_URL: 'https://dnznrvs05pmza.cloudfront.net/gemini/gemini-3.1-flash-lite-image/images/bdffbc71-4c28-4c42-9244-7e754e01fce5/8747b884-a554-4dc3-b06a-deabca42ab70/Use_the_uploaded_character_as_an_exact_identity_reference__A.jpg?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiZGY0ZTFhZmE0NGQyNTVkOSIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5NDMxNjI4Mn0.v5_HJCj97Nz2LObtg5kf3ryVWETwCW3DAC9C4j3XzwE'
+        run: |
+          mkdir -p public/assets
+          curl --fail --silent --show-error --location --retry 3 --max-time 120 "$ASSET_URL" -o public/assets/personagem-pix-alerta.jpg
+          test "$(stat -c %s public/assets/personagem-pix-alerta.jpg)" -gt 12000
+          file public/assets/personagem-pix-alerta.jpg
+      - name: Salvar imagem sem URL temporaria na pasta public
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/assets/personagem-pix-alerta.jpg
+          if ! git diff --cached --quiet; then
+            git commit -m 'TikTok IA: adicionar cena CGI da personagem feminina [skip ci]'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
