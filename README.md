@@ -1,5 +1,7 @@
 # TikTok IA — @metonalencar
 
+> **ATUALIZAÇÃO 08/11/2026 — Novo piloto com personagem feminina CGI criado e validado.** Há dois novos ativos permanentes em public/assets, novo renderizador scripts/piloto_visual_personagem.py, vídeo de 17,6 s em public/pilotos/piloto_personagem_cinematica.mp4 e miniatura real em public/pilotos/personagem_cinematica_preview.jpg. Consulte docs/STATUS_E_GATE_PUBLICACAO_2026-11-08.md. **É CGI 2.5D com movimentos, ainda não animação 3D completa aprovada.** A rotina antiga de slides permanece suspensa e nenhum novo post foi agendado.
+
 > **STATUS CRIATIVO — 01/11/2026: PRODUÇÃO SEMANAL SUSPENSA.** O usuário reafirmou que a identidade oficial é a **personagem feminina estilizada em 3D**, de cabelo comprido e moletom preto/rosa, com cenas ilustradas vivas e estética neon, conforme a imagem de identidade do canal. Robô 2D NEXO, telas com ícones e slides narrados **não são a proposta aprovada**. Leia [docs/DIRECAO_CRIATIVA.md](docs/DIRECAO_CRIATIVA.md). O gerador atual ainda não reproduz essa identidade e deve ser usado somente para testes manuais. Novos agendamentos e publicações dependem da aprovação visual do piloto.
 
 Projeto de vídeos educativos originais, sem uso de imagem ou voz real do titular, gerados com ferramentas gratuitas no GitHub Actions.
