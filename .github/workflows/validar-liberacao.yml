@@ -1,0 +1,42 @@
+name: Validar antes de liberar TikTok IA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/validate_release_gate.py'
+      - 'public/release-candidates/**'
+      - '.github/workflows/validar-liberacao.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  bloquear-videos-nao-aprovados:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Testar regras de seguranca
+        run: python scripts/validate_release_gate.py --self-test
+      - name: Instalar FFmpeg para examinar MP4s
+        if: hashFiles('public/release-candidates/semana-atual.json') != ''
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+      - name: Testar quatro videos finais, se existirem
+        shell: bash
+        run: |
+          if [ -f public/release-candidates/semana-atual.json ]; then
+            python scripts/validate_release_gate.py
+          else
+            echo "::notice::Sem 4 vídeos novos aprovados. A rotina automática do TikTok permanece desativada."
+            echo '## Nao liberado: sem candidatos novos' >> "$GITHUB_STEP_SUMMARY"
+            echo 'Nao agendar nem anunciar projeto pronto.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Limites de validacao
+        run: |
+          echo '## Importante' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Passar neste workflow NAO significa aprovacao visual nem post agendado.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Para ativar publicacao, a rotina ChatGPT tambem precisa revisar audiovisual e confirmar cada retorno do Metricool.' >> "$GITHUB_STEP_SUMMARY"
