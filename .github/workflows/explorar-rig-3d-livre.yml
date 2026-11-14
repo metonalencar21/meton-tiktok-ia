@@ -1,0 +1,76 @@
+name: Explorar rig 3D livre para a personagem oficial
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/inspect_character_rig.py'
+      - '.github/workflows/explorar-rig-3d-livre.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inventariar-rig-sem-publicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      RIG_URL: https://projects.blender.org/blender/blender-benchmarks/raw/branch/main/animation/rain/rain.blend
+      RIG_LICENSE: CC-BY-4.0
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar Blender livre
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq blender
+
+      - name: Baixar rig oficial de referência
+        run: |
+          mkdir -p .development public/development
+          curl --fail --location --retry 3 --retry-delay 3 \
+            --output .development/rain.blend "$RIG_URL"
+          test "$(stat -c%s .development/rain.blend)" -gt 1000000
+          sha256sum .development/rain.blend | tee public/development/rig-source.sha256
+
+      - name: Inventariar malha, ossos e expressões
+        id: inspect
+        continue-on-error: true
+        run: |
+          blender -b .development/rain.blend \
+            --python scripts/inspect_character_rig.py -- \
+            --output public/development/rig-inventory.json \
+            --source "$RIG_URL" \
+            --license "$RIG_LICENSE"
+
+      - name: Guardar somente evidências técnicas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: inventario-rig-3d-livre
+          path: |
+            public/development/rig-inventory.json
+            public/development/rig-source.sha256
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Registrar limites da prova
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '## Exploração de rig 3D — não é liberação'
+            echo
+            echo '- Fonte: Blender Foundation, benchmark Rain, CC-BY 4.0.'
+            echo '- Objetivo: verificar se há malha, esqueleto e controles suficientes para uma adaptação.'
+            echo '- O personagem Rain não é a identidade aprovada do canal.'
+            echo '- Nenhum MP4 foi publicado ou enviado ao Metricool.'
+            echo '- Próximo passo, se o inventário passar: mapear cabelo, rosto, roupa e controles para uma adaptação visual própria.'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Falhar se o ativo não tiver capacidade mínima
+        if: steps.inspect.outcome != 'success'
+        run: |
+          echo "::error::O rig gratuito não atingiu a capacidade técnica mínima. Não usar como personagem final."
+          exit 1
