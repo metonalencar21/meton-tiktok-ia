@@ -14,31 +14,71 @@ permissions:
 jobs:
   inventariar-rig-sem-publicar:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 20
     env:
-      RIG_REPOSITORY: https://projects.blender.org/blender/blender-benchmarks.git
-      RIG_PATH: animation/rain/rain.blend
+      RIG_POINTER_URL: https://projects.blender.org/blender/blender-benchmarks/raw/branch/main/animation/rain/rain.blend
+      RIG_LFS_BATCH_URL: https://projects.blender.org/blender/blender-benchmarks.git/info/lfs/objects/batch
       RIG_LICENSE: CC-BY-4.0
     steps:
       - uses: actions/checkout@v4
 
-      - name: Instalar Blender e Git LFS
+      - name: Instalar Blender livre
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq blender git-lfs
+          sudo apt-get install -y -qq blender
 
-      - name: Baixar somente o rig oficial de referência via Git LFS
+      - name: Resolver ponteiro Git LFS e baixar somente o rig
         run: |
           mkdir -p .development public/development
-          GIT_LFS_SKIP_SMUDGE=1 git clone --depth=1 --filter=blob:none --no-checkout \
-            "$RIG_REPOSITORY" .development/blender-benchmarks
-          git -C .development/blender-benchmarks sparse-checkout init --cone
-          git -C .development/blender-benchmarks sparse-checkout set animation/rain
-          GIT_LFS_SKIP_SMUDGE=1 git -C .development/blender-benchmarks checkout main
-          git -C .development/blender-benchmarks lfs pull --include="$RIG_PATH"
-          cp ".development/blender-benchmarks/$RIG_PATH" .development/rain.blend
-          test "$(stat -c%s .development/rain.blend)" -gt 1000000
-          sha256sum .development/rain.blend | tee public/development/rig-source.sha256
+          curl --fail --location --retry 3 --output .development/rain.pointer "$RIG_POINTER_URL"
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import shutil
+          from urllib.request import Request, urlopen
+
+          pointer = Path(".development/rain.pointer").read_text(encoding="utf-8")
+          values = {}
+          for line in pointer.splitlines():
+              if line.startswith("oid sha256:"):
+                  values["oid"] = line.split(":", 1)[1]
+              elif line.startswith("size "):
+                  values["size"] = int(line.split()[1])
+          if set(values) != {"oid", "size"}:
+              raise SystemExit("A fonte não devolveu um ponteiro Git LFS válido")
+
+          body = json.dumps({
+              "operation": "download",
+              "transfers": ["basic"],
+              "objects": [{"oid": values["oid"], "size": values["size"]}],
+          }).encode()
+          request = Request(
+              os.environ["RIG_LFS_BATCH_URL"],
+              data=body,
+              headers={
+                  "Accept": "application/vnd.git-lfs+json",
+                  "Content-Type": "application/vnd.git-lfs+json",
+              },
+              method="POST",
+          )
+          with urlopen(request, timeout=60) as response:
+              batch = json.load(response)
+          action = batch["objects"][0]["actions"]["download"]
+          download = Request(action["href"], headers=action.get("header", {}))
+          with urlopen(download, timeout=180) as response, open(".development/rain.blend", "wb") as target:
+              shutil.copyfileobj(response, target)
+
+          actual_size = Path(".development/rain.blend").stat().st_size
+          digest = hashlib.sha256(Path(".development/rain.blend").read_bytes()).hexdigest()
+          if actual_size != values["size"] or digest != values["oid"]:
+              raise SystemExit("Rig baixado não corresponde ao ponteiro oficial")
+          Path("public/development/rig-source.sha256").write_text(
+              f"{digest}  rain.blend\n", encoding="utf-8"
+          )
+          print(json.dumps({"bytes": actual_size, "sha256": digest}))
+          PY
 
       - name: Inventariar malha, ossos e expressões
         id: inspect
@@ -47,7 +87,7 @@ jobs:
           blender -b .development/rain.blend \
             --python scripts/inspect_character_rig.py -- \
             --output public/development/rig-inventory.json \
-            --source "$RIG_REPOSITORY/$RIG_PATH" \
+            --source "$RIG_POINTER_URL" \
             --license "$RIG_LICENSE"
 
       - name: Guardar somente evidências técnicas
