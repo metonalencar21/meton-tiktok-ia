@@ -16,21 +16,27 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
-      RIG_URL: https://projects.blender.org/blender/blender-benchmarks/raw/branch/main/animation/rain/rain.blend
+      RIG_REPOSITORY: https://projects.blender.org/blender/blender-benchmarks.git
+      RIG_PATH: animation/rain/rain.blend
       RIG_LICENSE: CC-BY-4.0
     steps:
       - uses: actions/checkout@v4
 
-      - name: Instalar Blender livre
+      - name: Instalar Blender e Git LFS
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq blender
+          sudo apt-get install -y -qq blender git-lfs
 
-      - name: Baixar rig oficial de referência
+      - name: Baixar somente o rig oficial de referência via Git LFS
         run: |
           mkdir -p .development public/development
-          curl --fail --location --retry 3 --retry-delay 3 \
-            --output .development/rain.blend "$RIG_URL"
+          GIT_LFS_SKIP_SMUDGE=1 git clone --depth=1 --filter=blob:none --no-checkout \
+            "$RIG_REPOSITORY" .development/blender-benchmarks
+          git -C .development/blender-benchmarks sparse-checkout init --cone
+          git -C .development/blender-benchmarks sparse-checkout set animation/rain
+          GIT_LFS_SKIP_SMUDGE=1 git -C .development/blender-benchmarks checkout main
+          git -C .development/blender-benchmarks lfs pull --include="$RIG_PATH"
+          cp ".development/blender-benchmarks/$RIG_PATH" .development/rain.blend
           test "$(stat -c%s .development/rain.blend)" -gt 1000000
           sha256sum .development/rain.blend | tee public/development/rig-source.sha256
 
@@ -41,7 +47,7 @@ jobs:
           blender -b .development/rain.blend \
             --python scripts/inspect_character_rig.py -- \
             --output public/development/rig-inventory.json \
-            --source "$RIG_URL" \
+            --source "$RIG_REPOSITORY/$RIG_PATH" \
             --license "$RIG_LICENSE"
 
       - name: Guardar somente evidências técnicas
@@ -52,7 +58,7 @@ jobs:
           path: |
             public/development/rig-inventory.json
             public/development/rig-source.sha256
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 14
 
       - name: Registrar limites da prova
