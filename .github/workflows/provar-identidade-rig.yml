@@ -1,0 +1,90 @@
+name: Provar identidade visual no rig 3D livre
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/render_identity_probe.py'
+      - '.github/workflows/provar-identidade-rig.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  renderizar-prova-sem-publicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      RIG_POINTER_URL: https://projects.blender.org/blender/blender-benchmarks/raw/branch/main/animation/rain/rain.blend
+      RIG_LFS_BATCH_URL: https://projects.blender.org/blender/blender-benchmarks.git/info/lfs/objects/batch
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar Blender e montagem de preview
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq blender imagemagick
+
+      - name: Baixar o objeto LFS oficial e verificar integridade
+        run: |
+          mkdir -p .development public/development/identity-probe
+          curl --fail --location --retry 3 --output .development/rain.pointer "$RIG_POINTER_URL"
+          python - <<'PY'
+          import hashlib, json, os, shutil
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+          values={}
+          for line in Path(".development/rain.pointer").read_text().splitlines():
+              if line.startswith("oid sha256:"): values["oid"]=line.split(":",1)[1]
+              elif line.startswith("size "): values["size"]=int(line.split()[1])
+          if set(values)!={"oid","size"}: raise SystemExit("Ponteiro LFS inválido")
+          body=json.dumps({"operation":"download","transfers":["basic"],
+              "objects":[{"oid":values["oid"],"size":values["size"]}]}).encode()
+          req=Request(os.environ["RIG_LFS_BATCH_URL"],data=body,method="POST",
+              headers={"Accept":"application/vnd.git-lfs+json",
+                       "Content-Type":"application/vnd.git-lfs+json"})
+          with urlopen(req,timeout=60) as response: batch=json.load(response)
+          action=batch["objects"][0]["actions"]["download"]
+          req=Request(action["href"],headers=action.get("header",{}))
+          with urlopen(req,timeout=240) as response, open(".development/rain.blend","wb") as target:
+              shutil.copyfileobj(response,target)
+          file=Path(".development/rain.blend")
+          digest=hashlib.sha256(file.read_bytes()).hexdigest()
+          if file.stat().st_size!=values["size"] or digest!=values["oid"]:
+              raise SystemExit("Objeto LFS não corresponde ao oficial")
+          print(json.dumps({"bytes":file.stat().st_size,"sha256":digest}))
+          PY
+
+      - name: Aplicar paleta oficial e renderizar três instantes reais
+        run: |
+          blender -b .development/rain.blend \
+            --python scripts/render_identity_probe.py -- \
+            --output-dir public/development/identity-probe
+
+      - name: Montar contato visual
+        run: |
+          montage public/development/identity-probe/identidade-rig-*.png \
+            -thumbnail 360x640 -tile 3x1 -geometry +8+8 \
+            public/development/identity-probe/contato-identidade-rig.jpg
+          test "$(stat -c%s public/development/identity-probe/contato-identidade-rig.jpg)" -gt 10000
+
+      - name: Guardar quadros e relatório
+        uses: actions/upload-artifact@v4
+        with:
+          name: prova-identidade-rig-3d
+          path: public/development/identity-probe/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Registrar que esta prova não libera postagem
+        run: |
+          {
+            echo '## Prova visual de desenvolvimento — não aprovada'
+            echo
+            echo '- Personagem-base articulada com materiais preto/rosa/castanho.'
+            echo '- Estúdio 3D com luzes pink, roxa e azul.'
+            echo '- Três instantes do arquivo real foram renderizados.'
+            echo '- Ainda é obrigatório revisar rosto, cabelo, roupa, enquadramento e movimento.'
+            echo '- Nenhum episódio, agendamento ou publicação foi criado.'
+          } >> "$GITHUB_STEP_SUMMARY"
