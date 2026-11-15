@@ -96,7 +96,16 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
 
     scene = bpy.context.scene
-    scene.render.engine = "BLENDER_EEVEE_NEXT"
+    available = {item.identifier for item in scene.bl_rna.properties["render"].fixed_type.properties["engine"].enum_items} if False else set()
+    # O identificador do Eevee mudou entre versões empacotadas do Blender.
+    for engine in ("BLENDER_EEVEE_NEXT", "BLENDER_EEVEE"):
+        try:
+            scene.render.engine = engine
+            break
+        except TypeError:
+            continue
+    else:
+        raise RuntimeError("Eevee não está disponível; Workbench não é aceito para esta prova")
     scene.render.resolution_x = 540
     scene.render.resolution_y = 960
     scene.render.resolution_percentage = 100
