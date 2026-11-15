@@ -24,7 +24,7 @@ jobs:
       - name: Instalar Blender e montagem de preview
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq blender imagemagick
+          sudo apt-get install -y -qq blender imagemagick xvfb libegl1 libgl1-mesa-dri mesa-vulkan-drivers
 
       - name: Baixar o objeto LFS oficial e verificar integridade
         run: |
@@ -58,7 +58,7 @@ jobs:
 
       - name: Aplicar paleta oficial e renderizar três instantes reais
         run: |
-          blender -b .development/rain.blend \
+          xvfb-run -a blender -b .development/rain.blend \
             --python scripts/render_identity_probe.py -- \
             --output-dir public/development/identity-probe
           test -s public/development/identity-probe/identidade-rig-01.png
