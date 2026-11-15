@@ -61,6 +61,10 @@ jobs:
           blender -b .development/rain.blend \
             --python scripts/render_identity_probe.py -- \
             --output-dir public/development/identity-probe
+          test -s public/development/identity-probe/identidade-rig-01.png
+          test -s public/development/identity-probe/identidade-rig-02.png
+          test -s public/development/identity-probe/identidade-rig-03.png
+          test -s public/development/identity-probe/identidade-rig-probe.json
 
       - name: Montar contato visual
         run: |
