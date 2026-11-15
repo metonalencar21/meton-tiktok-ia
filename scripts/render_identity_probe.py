@@ -96,7 +96,6 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
 
     scene = bpy.context.scene
-    available = {item.identifier for item in scene.bl_rna.properties["render"].fixed_type.properties["engine"].enum_items} if False else set()
     # O identificador do Eevee mudou entre versões empacotadas do Blender.
     for engine in ("BLENDER_EEVEE_NEXT", "BLENDER_EEVEE"):
         try:
@@ -106,8 +105,8 @@ def main():
             continue
     else:
         raise RuntimeError("Eevee não está disponível; Workbench não é aceito para esta prova")
-    scene.render.resolution_x = 540
-    scene.render.resolution_y = 960
+    scene.render.resolution_x = 270
+    scene.render.resolution_y = 480
     scene.render.resolution_percentage = 100
     scene.render.image_settings.file_format = "PNG"
     scene.render.film_transparent = False
@@ -169,6 +168,7 @@ def main():
         light.data.energy = energy
         light.data.shape = "DISK"
         light.data.size = height * 0.9
+        light.data.use_shadow = False
         look_at(light, center)
 
     bpy.ops.object.camera_add()
@@ -177,7 +177,7 @@ def main():
     distance = max(height * 1.55, width * 3.0)
     camera.location = center + Vector((0, -distance, height * 0.07))
     camera.data.lens = 58
-    camera.data.dof.use_dof = True
+    camera.data.dof.use_dof = False
     camera.data.dof.focus_object = next((o for o in character if o.name == "GEO-rain_head"), character[0])
     camera.data.dof.aperture_fstop = 4.0
     look_at(camera, center + Vector((0, 0, height * 0.06)))
@@ -200,7 +200,7 @@ def main():
         "status": "DEVELOPMENT_IDENTITY_PROBE_NOT_APPROVED",
         "frames": frames,
         "rendered": rendered,
-        "resolution": "540x960",
+        "resolution": "270x480",
         "engine": scene.render.engine,
         "palette_changes": palette_changes,
         "character_bounds": {
