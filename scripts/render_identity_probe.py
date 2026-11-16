@@ -71,6 +71,30 @@ def make_material(name: str, color, emission_strength=0.0):
     return material
 
 
+def force_simple_material(name: str, color, roughness=0.35):
+    """Substitui materiais de olhos do benchmark por um shader previsível.
+
+    Alguns materiais originais terminam em grupos/emissão e ignoram a edição
+    do Principled encontrado. A prova precisa mostrar a íris, não preservar o
+    look do benchmark.
+    """
+    material = bpy.data.materials.get(name)
+    if not material:
+        return False
+    material.use_nodes = True
+    nodes = material.node_tree.nodes
+    nodes.clear()
+    output = nodes.new("ShaderNodeOutputMaterial")
+    shader = nodes.new("ShaderNodeBsdfPrincipled")
+    shader.inputs["Base Color"].default_value = color
+    shader.inputs["Roughness"].default_value = roughness
+    strength = shader.inputs.get("Emission Strength")
+    if strength:
+        strength.default_value = 0.0
+    material.node_tree.links.new(shader.outputs["BSDF"], output.inputs["Surface"])
+    return True
+
+
 def assign(obj, material):
     obj.data.materials.clear()
     obj.data.materials.append(material)
@@ -157,6 +181,25 @@ def main():
         name: set_principled(name, color, metallic=metallic, roughness=roughness)
         for name, (color, metallic, roughness) in palette_targets.items()
     }
+    # Os olhos continuaram brancos na revisão 3 apesar de emissão zerada. A
+    # revisão 4 troca apenas a cadeia final desses materiais por BSDF simples.
+    eye_shader_overrides = {
+        "MAT-rain.eyes": force_simple_material(
+            "MAT-rain.eyes", (0.11, 0.018, 0.006, 1), 0.30
+        ),
+        "MAT-rain.eyedot": force_simple_material(
+            "MAT-rain.eyedot", (0.004, 0.001, 0.001, 1), 0.28
+        ),
+        "MAT-rain.eyes.viewport_blue": force_simple_material(
+            "MAT-rain.eyes.viewport_blue", (0.11, 0.018, 0.006, 1), 0.30
+        ),
+        "MAT-rain.eyes.viewport_black": force_simple_material(
+            "MAT-rain.eyes.viewport_black", (0.004, 0.001, 0.001, 1), 0.28
+        ),
+        "MAT-rain.eyes.viewport_white": force_simple_material(
+            "MAT-rain.eyes.viewport_white", (0.42, 0.30, 0.23, 1), 0.55
+        ),
+    }
 
     scene.frame_set(scene.frame_start)
     bpy.context.view_layer.update()
@@ -218,7 +261,7 @@ def main():
 
     report = {
         "status": "DEVELOPMENT_IDENTITY_PROBE_NOT_APPROVED",
-        "probe_revision": 3,
+        "probe_revision": 4,
         "frames": frames,
         "rendered": rendered,
         "resolution": "270x480",
@@ -226,6 +269,7 @@ def main():
         "framing": "medium_close_development",
         "eye_emission_disabled": True,
         "benchmark_compositor_disabled": True,
+        "eye_shader_overrides": eye_shader_overrides,
         "palette_changes": palette_changes,
         "character_bounds": {
             "minimum": list(minimum),
@@ -239,7 +283,7 @@ def main():
             "lens_mm": camera.data.lens,
         },
         "warning": (
-            "A prova revisao 3 testa close real e remove compositor/estouro ocular. Não comprova cabelo longo, "
+            "A prova revisao 4 força shaders opacos nos olhos e mantém o close. Não comprova cabelo longo, "
             "moletom fiel, atuação temática, sincronização labial ou aprovação final."
         ),
     }
