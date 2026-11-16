@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/render_identity_probe.py'
+      - 'scripts/validate_identity_probe.py'
       - '.github/workflows/provar-identidade-rig.yml'
 
 permissions:
@@ -65,6 +66,9 @@ jobs:
           test -s public/development/identity-probe/identidade-rig-02.png
           test -s public/development/identity-probe/identidade-rig-03.png
           test -s public/development/identity-probe/identidade-rig-probe.json
+
+      - name: Validar PNGs, frames distintos e estado bloqueado
+        run: python scripts/validate_identity_probe.py public/development/identity-probe
 
       - name: Montar contato visual
         run: |
