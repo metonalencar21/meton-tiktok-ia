@@ -28,31 +28,31 @@ def set_principled(material_name: str, color, metallic=0.0, roughness=0.42):
     if not material:
         return False
     material.use_nodes = True
-    shader = next(
-        (node for node in material.node_tree.nodes if node.type == "BSDF_PRINCIPLED"),
-        None,
-    )
-    if shader is None:
+    shaders = [
+        node for node in material.node_tree.nodes if node.type == "BSDF_PRINCIPLED"
+    ]
+    if not shaders:
         return False
-    base = shader.inputs.get("Base Color")
-    if base:
-        for link in list(base.links):
-            material.node_tree.links.remove(link)
-        base.default_value = color
-    if shader.inputs.get("Metallic"):
-        shader.inputs["Metallic"].default_value = metallic
-    if shader.inputs.get("Roughness"):
-        shader.inputs["Roughness"].default_value = roughness
-    # A primeira prova estourou os olhos. Materiais da personagem não podem
-    # emitir luz; só as barras do cenário usam emissão deliberada.
-    emission = shader.inputs.get("Emission Color") or shader.inputs.get("Emission")
-    if emission:
-        for link in list(emission.links):
-            material.node_tree.links.remove(link)
-        emission.default_value = color
-    strength = shader.inputs.get("Emission Strength")
-    if strength:
-        strength.default_value = 0.0
+    for shader in shaders:
+        base = shader.inputs.get("Base Color")
+        if base:
+            for link in list(base.links):
+                material.node_tree.links.remove(link)
+            base.default_value = color
+        if shader.inputs.get("Metallic"):
+            shader.inputs["Metallic"].default_value = metallic
+        if shader.inputs.get("Roughness"):
+            shader.inputs["Roughness"].default_value = roughness
+        # A primeira prova estourou os olhos. Materiais da personagem não podem
+        # emitir luz; só as barras do cenário usam emissão deliberada.
+        emission = shader.inputs.get("Emission Color") or shader.inputs.get("Emission")
+        if emission:
+            for link in list(emission.links):
+                material.node_tree.links.remove(link)
+            emission.default_value = color
+        strength = shader.inputs.get("Emission Strength")
+        if strength:
+            strength.default_value = 0.0
     return True
 
 
@@ -120,6 +120,9 @@ def main():
     scene.render.resolution_percentage = 100
     scene.render.image_settings.file_format = "PNG"
     scene.render.film_transparent = False
+    # O benchmark traz um compositor cinematográfico próprio. Ele foi a causa
+    # provável do halo branco nos olhos e não pertence ao estúdio do canal.
+    scene.use_nodes = False
     try:
         scene.view_settings.look = "AgX - Medium High Contrast"
     except Exception:
@@ -173,9 +176,9 @@ def main():
     cube("METON-floor", (center.x, center.y, minimum.z - 0.035), (width * 2.5, height * 1.5, 0.03), dark)
 
     for name, color, energy, offset in (
-        ("METON-key-pink", (1.0, 0.02, 0.26), 650, (-width * 1.7, -height * 0.5, height * 0.55)),
-        ("METON-fill-blue", (0.02, 0.22, 1.0), 520, (width * 1.6, -height * 0.15, height * 0.3)),
-        ("METON-rim-purple", (0.55, 0.01, 1.0), 850, (0, height * 0.65, height * 0.75)),
+        ("METON-key-pink", (1.0, 0.02, 0.26), 120, (-width * 1.7, -height * 0.5, height * 0.55)),
+        ("METON-fill-blue", (0.02, 0.22, 1.0), 85, (width * 1.6, -height * 0.15, height * 0.3)),
+        ("METON-rim-purple", (0.55, 0.01, 1.0), 160, (0, height * 0.65, height * 0.75)),
     ):
         bpy.ops.object.light_add(type="AREA", location=center + Vector(offset))
         light = bpy.context.object
@@ -189,13 +192,13 @@ def main():
 
     # A prova anterior enquadrou o corpo inteiro pequeno demais. Esta versão
     # testa deliberadamente plano médio/close, sem fingir que corrige a identidade.
-    subject_target = Vector((center.x, center.y, minimum.z + height * 0.67))
+    subject_target = Vector((center.x, center.y, minimum.z + height * 0.72))
     bpy.ops.object.camera_add()
     camera = bpy.context.object
     camera.name = "METON-camera-medium-close"
-    distance = max(height * 0.95, width * 2.1)
+    distance = max(height * 0.52, width * 1.1)
     camera.location = subject_target + Vector((0, -distance, 0))
-    camera.data.lens = 52
+    camera.data.lens = 50
     camera.data.dof.use_dof = False
     look_at(camera, subject_target)
     scene.camera = camera
@@ -215,13 +218,14 @@ def main():
 
     report = {
         "status": "DEVELOPMENT_IDENTITY_PROBE_NOT_APPROVED",
-        "probe_revision": 2,
+        "probe_revision": 3,
         "frames": frames,
         "rendered": rendered,
         "resolution": "270x480",
         "engine": scene.render.engine,
         "framing": "medium_close_development",
         "eye_emission_disabled": True,
+        "benchmark_compositor_disabled": True,
         "palette_changes": palette_changes,
         "character_bounds": {
             "minimum": list(minimum),
@@ -235,7 +239,7 @@ def main():
             "lens_mm": camera.data.lens,
         },
         "warning": (
-            "A prova revisao 2 corrige enquadramento e emissão ocular. Não comprova cabelo longo, "
+            "A prova revisao 3 testa close real e remove compositor/estouro ocular. Não comprova cabelo longo, "
             "moletom fiel, atuação temática, sincronização labial ou aprovação final."
         ),
     }
