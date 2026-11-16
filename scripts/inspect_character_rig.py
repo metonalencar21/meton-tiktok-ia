@@ -27,6 +27,9 @@ SEMANTIC_PATTERNS = {
     "mouth": re.compile(r"(?i)(mouth|lip|jaw|tongue|sneer|smile)"),
     "torso": re.compile(r"(?i)(spine|chest|torso|hip|pelvis|root)"),
 }
+VISUAL_BINDING_OBJECT = re.compile(
+    r"(?i)(eye|cornea|hair|head|top|scarf|body|hand)"
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -67,6 +70,49 @@ def animation_binding(obj):
             "drivers": drivers,
         }
     return None
+
+
+def material_binding(obj):
+    if obj.type != "MESH" or not VISUAL_BINDING_OBJECT.search(obj.name):
+        return None
+    polygon_counts = {}
+    for polygon in obj.data.polygons:
+        polygon_counts[str(polygon.material_index)] = (
+            polygon_counts.get(str(polygon.material_index), 0) + 1
+        )
+    slots = []
+    for index, slot in enumerate(obj.material_slots):
+        material = slot.material
+        row = {
+            "slot": index,
+            "material": material.name if material else None,
+            "polygons": polygon_counts.get(str(index), 0),
+            "use_nodes": bool(material and material.use_nodes),
+            "nodes": [],
+            "surface_sources": [],
+        }
+        if material and material.use_nodes and material.node_tree:
+            row["nodes"] = clean_names(
+                (f"{node.name}:{node.type}" for node in material.node_tree.nodes),
+                100,
+            )
+            for output in (
+                node for node in material.node_tree.nodes
+                if node.type == "OUTPUT_MATERIAL"
+            ):
+                surface = output.inputs.get("Surface")
+                if surface:
+                    row["surface_sources"].extend(
+                        f"{link.from_node.name}:{link.from_node.type}:{link.from_socket.name}"
+                        for link in surface.links
+                    )
+            row["surface_sources"] = clean_names(row["surface_sources"], 20)
+        slots.append(row)
+    return {
+        "object": obj.name,
+        "hide_render": obj.hide_render,
+        "slots": slots,
+    }
 
 
 def main() -> None:
@@ -123,6 +169,9 @@ def main() -> None:
     action_names = clean_names((action.name for action in bpy.data.actions), 80)
     object_names = clean_names((obj.name for obj in bpy.data.objects), 160)
     bindings = [row for obj in bpy.data.objects if (row := animation_binding(obj))]
+    material_bindings = [
+        row for obj in meshes if (row := material_binding(obj))
+    ]
     combined_semantics = {
         category: clean_names(matches, 200)
         for category, matches in combined_semantics.items()
@@ -166,6 +215,7 @@ def main() -> None:
             "cameras": len(cameras),
             "lights": len(lights),
             "animation_bindings": len(bindings),
+            "material_bindings": len(material_bindings),
         },
         "checks": checks,
         "rig_capability_candidate": all(checks.values()),
@@ -174,6 +224,7 @@ def main() -> None:
         "semantic_controls": semantic_rows,
         "semantic_controls_combined": combined_semantics,
         "animation_bindings": bindings,
+        "material_bindings": material_bindings,
         "armatures": armature_rows,
         "shape_keys": shape_key_rows,
         "materials": material_names,
