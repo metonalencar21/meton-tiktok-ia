@@ -227,6 +227,37 @@ def main():
     cube("METON-neon-right", (center.x + width * 1.25, maximum.y + height * 0.38, center.z - height * 0.02), (0.035, 0.035, height * 0.62), cyan)
     cube("METON-floor", (center.x, center.y, minimum.z - 0.035), (width * 2.5, height * 1.5, 0.03), dark)
 
+    # Prop temático real em 3D, não um cartão sobreposto na edição.
+    # O telefone e o alerta mudam de posição/tamanho nos três momentos.
+    phone_shell = make_material("METON-phone-shell", (0.012, 0.014, 0.027, 1))
+    phone_screen = make_material("METON-phone-screen", (0.018, 0.10, 0.24, 1), 0.6)
+    phone_alert = make_material("METON-phone-alert", (0.95, 0.008, 0.10, 1), 2.0)
+    prop_x = center.x + width * 0.58
+    prop_y = minimum.y - height * 0.18
+    prop_z = minimum.z + height * 0.69
+    shell = cube("METON-PIX-phone-3d", (prop_x, prop_y, prop_z),
+                 (width * 0.19, height * 0.022, height * 0.17), phone_shell)
+    screen = cube("METON-PIX-screen-3d", (prop_x, prop_y - height * 0.024, prop_z),
+                  (width * 0.16, height * 0.006, height * 0.14), phone_screen)
+    alert = cube("METON-PIX-alert-3d", (prop_x, prop_y - height * 0.036, prop_z + height * 0.04),
+                 (width * 0.10, height * 0.007, height * 0.026), phone_alert)
+    phone_parts = [shell, screen, alert]
+    for part in phone_parts:
+        part.hide_render = False
+    # Prova de ação em três batidas: telefone entra, alerta cresce e recua.
+    # Ainda não simula toque nem contato real da mão com o objeto.
+    for frame_number, dx, dz, alert_size in (
+        (scene.frame_start, width * 0.35, -height * 0.16, 0.25),
+        (scene.frame_start + int((scene.frame_end-scene.frame_start)*0.5), 0.0, 0.0, 1.0),
+        (scene.frame_end, -width * 0.08, height * 0.05, 0.45),
+    ):
+        for part in phone_parts:
+            part.location.x = prop_x + dx
+            part.location.z = prop_z + dz + (height * 0.04 if part == alert else 0)
+            part.keyframe_insert(data_path="location", frame=frame_number)
+        alert.scale.x = width * 0.10 * alert_size
+        alert.keyframe_insert(data_path="scale", frame=frame_number)
+
     for name, color, energy, offset in (
         ("METON-key-pink", (1.0, 0.02, 0.26), 120, (-width * 1.7, -height * 0.5, height * 0.55)),
         ("METON-fill-blue", (0.02, 0.22, 1.0), 85, (width * 1.6, -height * 0.15, height * 0.3)),
@@ -270,8 +301,9 @@ def main():
 
     report = {
         "status": "DEVELOPMENT_IDENTITY_PROBE_NOT_APPROVED",
-        "probe_revision": 5,
+        "probe_revision": 6,
         "frames": frames,
+        "thematic_prop": "animated_3d_phone_and_pix_alert_development_only",
         "rendered": rendered,
         "resolution": "270x480",
         "engine": scene.render.engine,
