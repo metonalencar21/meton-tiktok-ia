@@ -200,6 +200,15 @@ def main():
             "MAT-rain.eyes.viewport_white", (0.42, 0.30, 0.23, 1), 0.55
         ),
     }
+    # O inventário da revisão 5 mostrou que GEO-rain_eye_cornea é uma casca
+    # separada (Glossy + Refraction) sobre a íris. No Eevee headless ela fica
+    # branca e encobre os materiais castanhos. A prova desativa somente essa
+    # casca; um shader de córnea compatível será necessário no modelo final.
+    hidden_cornea_objects = []
+    for obj in bpy.data.objects:
+        if obj.name.startswith("GEO-rain_eye_cornea"):
+            obj.hide_render = True
+            hidden_cornea_objects.append(obj.name)
 
     scene.frame_set(scene.frame_start)
     bpy.context.view_layer.update()
@@ -261,7 +270,7 @@ def main():
 
     report = {
         "status": "DEVELOPMENT_IDENTITY_PROBE_NOT_APPROVED",
-        "probe_revision": 4,
+        "probe_revision": 5,
         "frames": frames,
         "rendered": rendered,
         "resolution": "270x480",
@@ -270,6 +279,7 @@ def main():
         "eye_emission_disabled": True,
         "benchmark_compositor_disabled": True,
         "eye_shader_overrides": eye_shader_overrides,
+        "hidden_cornea_objects": hidden_cornea_objects,
         "palette_changes": palette_changes,
         "character_bounds": {
             "minimum": list(minimum),
@@ -283,7 +293,7 @@ def main():
             "lens_mm": camera.data.lens,
         },
         "warning": (
-            "A prova revisao 4 força shaders opacos nos olhos e mantém o close. Não comprova cabelo longo, "
+            "A prova revisao 5 remove a córnea refrativa incompatível e mantém o close. Não comprova cabelo longo, "
             "moletom fiel, atuação temática, sincronização labial ou aprovação final."
         ),
     }
