@@ -7,14 +7,19 @@ from pathlib import Path
 def validate(folder: Path):
     manifest = json.loads((folder / "identidade-rig-probe.json").read_text(encoding="utf-8"))
     assert manifest["status"] == "DEVELOPMENT_IDENTITY_PROBE_NOT_APPROVED"
-    assert manifest["probe_revision"] >= 6
+    assert manifest["probe_revision"] >= 7
     assert manifest["thematic_prop"] == "animated_3d_phone_and_pix_alert_development_only"
+    evidence = manifest["thematic_prop_evidence"]
+    assert evidence["assembly_root"] == "METON-PIX-phone-root"
+    assert len(evidence["children"]) == 3
+    assert len(set(evidence["keyframes"])) == 3
+    assert evidence["screen_faces_camera"] is True
     assert len(set(manifest["frames"])) == 3
     assert manifest["resolution"] == "270x480"
     frames = [folder / f"identidade-rig-{i:02d}.png" for i in range(1, 4)]
     for frame in frames:
         data = frame.read_bytes()
-        assert data[:8] == b"\\x89PNG\\r\\n\\x1a\\n", frame
+        assert data[:8] == bytes.fromhex("89504e470d0a1a0a"), frame
         assert int.from_bytes(data[16:20], "big") == 270, frame
         assert int.from_bytes(data[20:24], "big") == 480, frame
         assert len(data) > 10000, frame
