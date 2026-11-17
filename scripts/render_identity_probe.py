@@ -228,25 +228,25 @@ def main():
     cube("METON-floor", (center.x, center.y, minimum.z - 0.035), (width * 2.5, height * 1.5, 0.03), dark)
 
     # Prop temático real em 3D, não um cartão sobreposto na edição.
-    # Revisão 8: o conjunto é rigidamente agrupado, reduzido e reposicionado dentro do
+    # Revisão 9: o conjunto é rigidamente agrupado e ancorado na faixa inferior do
     # enquadramento vertical. A revisão 6 o colocou fora do campo da câmera.
     phone_shell = make_material("METON-phone-shell", (0.012, 0.014, 0.027, 1))
     phone_screen = make_material("METON-phone-screen", (0.018, 0.10, 0.24, 1), 0.6)
     phone_alert = make_material("METON-phone-alert", (0.95, 0.008, 0.10, 1), 2.0)
-    prop_x = center.x + width * 0.34
+    prop_x = center.x + width * 0.12
     prop_y = minimum.y - height * 0.06
-    prop_z = minimum.z + height * 0.58
+    prop_z = minimum.z + height * 0.49
 
     phone_root = bpy.data.objects.new("METON-PIX-phone-root", None)
     bpy.context.collection.objects.link(phone_root)
     phone_root.location = (prop_x, prop_y, prop_z)
 
     shell = cube("METON-PIX-phone-3d", (0, 0, 0),
-                 (width * 0.07, height * 0.014, height * 0.10), phone_shell)
+                 (width * 0.08, height * 0.014, height * 0.105), phone_shell)
     screen = cube("METON-PIX-screen-3d", (0, -height * 0.016, 0),
-                  (width * 0.058, height * 0.004, height * 0.082), phone_screen)
+                  (width * 0.067, height * 0.004, height * 0.087), phone_screen)
     alert = cube("METON-PIX-alert-3d", (0, -height * 0.022, height * 0.025),
-                 (width * 0.043, height * 0.005, height * 0.018), phone_alert)
+                 (width * 0.05, height * 0.005, height * 0.018), phone_alert)
     phone_parts = [shell, screen, alert]
     for part in phone_parts:
         part.parent = phone_root
@@ -262,7 +262,7 @@ def main():
     for frame_number, dx, dz, alert_size in phone_keyframes:
         phone_root.location = (prop_x + dx, prop_y, prop_z + dz)
         phone_root.keyframe_insert(data_path="location", frame=frame_number)
-        alert.scale.x = width * 0.043 * alert_size
+        alert.scale.x = width * 0.05 * alert_size
         alert.keyframe_insert(data_path="scale", frame=frame_number)
 
     for name, color, energy, offset in (
@@ -308,7 +308,7 @@ def main():
 
     report = {
         "status": "DEVELOPMENT_IDENTITY_PROBE_NOT_APPROVED",
-        "probe_revision": 8,
+        "probe_revision": 9,
         "frames": frames,
         "thematic_prop": "animated_3d_phone_and_pix_alert_development_only",
         "thematic_prop_evidence": {
@@ -339,7 +339,7 @@ def main():
             "lens_mm": camera.data.lens,
         },
         "warning": (
-            "A prova revisao 8 mantém olhos castanhos e reduz o celular PIX para preservar a atuação no close. Não comprova cabelo longo, "
+            "A prova revisao 9 mantém olhos castanhos e ancora o celular PIX na faixa inferior do close. Não comprova cabelo longo, "
             "moletom fiel, atuação temática, sincronização labial ou aprovação final."
         ),
     }
