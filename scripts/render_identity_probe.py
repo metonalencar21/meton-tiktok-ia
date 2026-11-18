@@ -293,6 +293,15 @@ def main():
     look_at(camera, subject_target)
     scene.camera = camera
 
+    # Movimento de câmera real para evitar a sensação de imagem parada:
+    # aproximação curta e micro-deslocamento lateral acompanhando a entrada do prop.
+    camera.location = subject_target + Vector((0, -distance * 1.06, height * 0.015))
+    camera.keyframe_insert(data_path="location", frame=scene.frame_start)
+    camera.location = subject_target + Vector((width * 0.035, -distance, height * 0.02))
+    camera.keyframe_insert(data_path="location", frame=scene.frame_start + int((scene.frame_end-scene.frame_start)*0.5))
+    camera.location = subject_target + Vector((-width * 0.02, -distance * 0.98, height * 0.01))
+    camera.keyframe_insert(data_path="location", frame=scene.frame_end)
+
     span = max(1, scene.frame_end - scene.frame_start)
     frames = [
         scene.frame_start + int(span * 0.16),
@@ -308,7 +317,7 @@ def main():
 
     report = {
         "status": "DEVELOPMENT_IDENTITY_PROBE_NOT_APPROVED",
-        "probe_revision": 9,
+        "probe_revision": 10,
         "frames": frames,
         "thematic_prop": "animated_3d_phone_and_pix_alert_development_only",
         "thematic_prop_evidence": {
@@ -317,6 +326,7 @@ def main():
             "base_location": list((prop_x, prop_y, prop_z)),
             "keyframes": [item[0] for item in phone_keyframes],
             "screen_faces_camera": True,
+            "camera_motion": "push_in_and_lateral_micro_shift",
         },
         "rendered": rendered,
         "resolution": "270x480",
@@ -339,7 +349,7 @@ def main():
             "lens_mm": camera.data.lens,
         },
         "warning": (
-            "A prova revisao 9 mantém olhos castanhos e ancora o celular PIX na faixa inferior do close. Não comprova cabelo longo, "
+            "A prova revisao 10 adiciona movimento real de câmera e mantém olhos castanhos e ancora o celular PIX na faixa inferior do close. Não comprova cabelo longo, "
             "moletom fiel, atuação temática, sincronização labial ou aprovação final."
         ),
     }
