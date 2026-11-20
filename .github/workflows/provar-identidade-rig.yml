@@ -27,6 +27,9 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq blender imagemagick xvfb libegl1 libgl1-mesa-dri mesa-vulkan-drivers
 
+      - name: Compilar script antes do download
+        run: python -m py_compile scripts/render_identity_probe.py scripts/validate_identity_probe.py
+
       - name: Baixar o objeto LFS oficial e verificar integridade
         run: |
           mkdir -p .development public/development/identity-probe
