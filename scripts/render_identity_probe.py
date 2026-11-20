@@ -265,7 +265,7 @@ def main():
         alert.scale.x = width * 0.05 * alert_size
         alert.keyframe_insert(data_path="scale", frame=frame_number)
 
-    for name, color, energy, offset in (
+    # Revisão 11: adicionar atuação corporal mínima no rig quando os ossos existirem.\n    gesture_report = {"armature": None, "bones_keyframed": []}\n    armatures = [obj for obj in bpy.data.objects if obj.type == "ARMATURE" and obj.name.startswith("RIG-rain")]\n    if armatures:\n        armature = armatures[0]\n        gesture_report["armature"] = armature.name\n        pose_bones = armature.pose.bones\n        candidates = {"left_arm": ("upper_arm.L", "arm.L", "shoulder.L"), "right_arm": ("upper_arm.R", "arm.R", "shoulder.R"), "head": ("head", "Head", "neck")}\n        gesture_frames = (scene.frame_start, scene.frame_start + int((scene.frame_end-scene.frame_start)*0.5), scene.frame_end)\n        for label, names in candidates.items():\n            bone = next((pose_bones.get(name) for name in names if pose_bones.get(name)), None)\n            if not bone:\n                continue\n            for frame_number, z_rot, x_rot in zip(gesture_frames, (0.0, -0.18, 0.08), (0.0, 0.10, -0.04)):\n                bone.rotation_mode = "XYZ"\n                bone.rotation_euler.z = z_rot\n                bone.rotation_euler.x = x_rot\n                bone.keyframe_insert(data_path="rotation_euler", frame=frame_number)\n            gesture_report["bones_keyframed"].append(label)\n\n    for name, color, energy, offset in (
         ("METON-key-pink", (1.0, 0.02, 0.26), 120, (-width * 1.7, -height * 0.5, height * 0.55)),
         ("METON-fill-blue", (0.02, 0.22, 1.0), 85, (width * 1.6, -height * 0.15, height * 0.3)),
         ("METON-rim-purple", (0.55, 0.01, 1.0), 160, (0, height * 0.65, height * 0.75)),
@@ -317,9 +317,9 @@ def main():
 
     report = {
         "status": "DEVELOPMENT_IDENTITY_PROBE_NOT_APPROVED",
-        "probe_revision": 10,
+        "probe_revision": 11,
         "frames": frames,
-        "thematic_prop": "animated_3d_phone_and_pix_alert_development_only",
+        "thematic_prop": "animated_3d_phone_and_pix_alert_development_only",\n        "gesture_test": gesture_report,
         "thematic_prop_evidence": {
             "assembly_root": phone_root.name,
             "children": [part.name for part in phone_parts],
