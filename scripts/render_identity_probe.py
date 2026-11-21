@@ -252,9 +252,9 @@ def main():
         part.parent = phone_root
         part.hide_render = False
 
-    # Revisão 12: usar os controles reais do rig Rain e manter o telefone
-    # próximo da mão direita. A revisão 11 procurava nomes genéricos e, por isso,
-    # registrava bones_keyframed vazio apesar de o Action ficar verde.
+    # Revisão 13: usar os controles reais do rig Rain e manter o telefone
+    # próximo da mão direita, mas sempre à frente da malha. A revisão 12 mapeou
+    # os controles corretamente, porém o telefone ficou ocluído pelo corpo.
     gesture_report = {
         "armature": None,
         "controls_keyframed": {},
@@ -297,7 +297,8 @@ def main():
                 bone.keyframe_insert(data_path="rotation_euler", frame=frame_number)
 
     # O telefone é menor e segue a posição mundial de IK-Hand.R nos três atos.
-    # Se o controle não existir, conserva-se o fallback explícito dentro do close.
+    # O eixo Y recebe folga negativa suficiente para deixá-lo à frente da malha,
+    # preservando a tela voltada para a câmera.
     for part, scale in (
         (shell, (width * 0.055, height * 0.012, height * 0.078)),
         (screen, (width * 0.046, height * 0.004, height * 0.064)),
@@ -320,9 +321,9 @@ def main():
         if tracking_bone:
             hand_world = armature.matrix_world @ tracking_bone.matrix.translation
             phone_root.location = hand_world + Vector((
-                width * 0.055,
-                -height * 0.085,
-                height * 0.035,
+                width * 0.12,
+                -height * 0.20,
+                height * 0.01,
             ))
         else:
             phone_root.location = (
@@ -381,15 +382,36 @@ def main():
         scene.frame_start + int(span * 0.84),
     ]
     rendered = []
+    # Registra e renderiza a posição real do telefone nos mesmos quadros usados
+    # na revisão visual. Isso evita validar apenas keyframes intermediários.
+    gesture_report["phone_world_positions"] = []
     for index, frame in enumerate(frames, 1):
         scene.frame_set(frame)
+        bpy.context.view_layer.update()
+        if tracking_bone:
+            hand_world = armature.matrix_world @ tracking_bone.matrix.translation
+            phone_root.location = hand_world + Vector((
+                width * 0.12,
+                -height * 0.20,
+                height * 0.01,
+            ))
+        else:
+            phone_root.location = (
+                prop_x + width * 0.02,
+                minimum.y - height * 0.20,
+                prop_z + height * 0.10,
+            )
+        bpy.context.view_layer.update()
+        gesture_report["phone_world_positions"].append(
+            [round(value, 6) for value in phone_root.location]
+        )
         scene.render.filepath = str(out / f"identidade-rig-{index:02d}.png")
         bpy.ops.render.render(write_still=True)
         rendered.append(scene.render.filepath)
 
     report = {
         "status": "DEVELOPMENT_IDENTITY_PROBE_NOT_APPROVED",
-        "probe_revision": 12,
+        "probe_revision": 13,
         "frames": frames,
         "thematic_prop": "animated_3d_phone_and_pix_alert_development_only",
         "gesture_test": gesture_report,
@@ -423,7 +445,7 @@ def main():
             "lens_mm": camera.data.lens,
         },
         "warning": (
-            "A prova revisao 12 usa controles reais de mão/cabeça e faz o celular PIX acompanhar IK-Hand.R. Não comprova cabelo longo, "
+            "A prova revisao 13 usa controles reais de mão/cabeça e mantém o celular PIX à frente da malha ao acompanhar IK-Hand.R. Não comprova cabelo longo, "
             "moletom fiel, atuação temática, sincronização labial ou aprovação final."
         ),
     }
