@@ -7,8 +7,21 @@ from pathlib import Path
 def validate(folder: Path):
     manifest = json.loads((folder / "identidade-rig-probe.json").read_text(encoding="utf-8"))
     assert manifest["status"] == "DEVELOPMENT_IDENTITY_PROBE_NOT_APPROVED"
-    assert manifest["probe_revision"] >= 7
+    assert manifest["probe_revision"] >= 13
     assert manifest["thematic_prop"] == "animated_3d_phone_and_pix_alert_development_only"
+    gesture = manifest["gesture_test"]
+    expected_controls = {
+        "left_hand": "IK-Hand.L",
+        "right_hand": "IK-Hand.R",
+        "head": "FK-Head",
+    }
+    assert gesture["controls_keyframed"] == expected_controls
+    assert gesture["phone_anchor"] == "IK-Hand.R"
+    phone_positions = gesture["phone_world_positions"]
+    assert len(phone_positions) == 3
+    assert len({tuple(position) for position in phone_positions}) == 3, (
+        "Celular sem deslocamento comprovado nos quadros revisados"
+    )
     evidence = manifest["thematic_prop_evidence"]
     assert evidence["assembly_root"] == "METON-PIX-phone-root"
     assert len(evidence["children"]) == 3
