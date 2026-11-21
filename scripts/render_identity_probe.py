@@ -252,38 +252,90 @@ def main():
         part.parent = phone_root
         part.hide_render = False
 
-    # Três batidas dentro do close: entrada curta, alerta máximo e recuo.
-    # Só o root se move; tela e alerta não podem descolar da carcaça.
-    phone_keyframes = (
-        (scene.frame_start, width * 0.04, -height * 0.025, 0.35),
-        (scene.frame_start + int((scene.frame_end-scene.frame_start)*0.5), 0.0, 0.0, 1.0),
-        (scene.frame_end, -width * 0.025, height * 0.018, 0.55),
+    # Revisão 12: usar os controles reais do rig Rain e manter o telefone
+    # próximo da mão direita. A revisão 11 procurava nomes genéricos e, por isso,
+    # registrava bones_keyframed vazio apesar de o Action ficar verde.
+    gesture_report = {
+        "armature": None,
+        "controls_keyframed": {},
+        "phone_anchor": None,
+        "phone_world_positions": [],
+    }
+    armatures = [
+        obj for obj in bpy.data.objects
+        if obj.type == "ARMATURE" and obj.name.startswith("RIG-rain")
+    ]
+    armature = armatures[0] if armatures else None
+    pose_bones = armature.pose.bones if armature else None
+    gesture_frames = (
+        scene.frame_start,
+        scene.frame_start + int((scene.frame_end-scene.frame_start)*0.5),
+        scene.frame_end,
     )
-    for frame_number, dx, dz, alert_size in phone_keyframes:
-        phone_root.location = (prop_x + dx, prop_y, prop_z + dz)
-        phone_root.keyframe_insert(data_path="location", frame=frame_number)
-        alert.scale.x = width * 0.05 * alert_size
-        alert.keyframe_insert(data_path="scale", frame=frame_number)
 
-    # Revisão 11: adicionar atuação corporal mínima no rig quando os ossos existirem.
-    gesture_report = {"armature": None, "bones_keyframed": []}
-    armatures = [obj for obj in bpy.data.objects if obj.type == "ARMATURE" and obj.name.startswith("RIG-rain")]
-    if armatures:
-        armature = armatures[0]
+    if armature:
         gesture_report["armature"] = armature.name
-        pose_bones = armature.pose.bones
-        candidates = {"left_arm": ("upper_arm.L", "arm.L", "shoulder.L"), "right_arm": ("upper_arm.R", "arm.R", "shoulder.R"), "head": ("head", "Head", "neck")}
-        gesture_frames = (scene.frame_start, scene.frame_start + int((scene.frame_end-scene.frame_start)*0.5), scene.frame_end)
+        candidates = {
+            "left_hand": ("IK-Hand.L", "hand.L", "Hand.L"),
+            "right_hand": ("IK-Hand.R", "hand.R", "Hand.R"),
+            "head": ("FK-Head", "head", "Head", "neck"),
+        }
         for label, names in candidates.items():
             bone = next((pose_bones.get(name) for name in names if pose_bones.get(name)), None)
             if not bone:
                 continue
-            for frame_number, z_rot, x_rot in zip(gesture_frames, (0.0, -0.18, 0.08), (0.0, 0.10, -0.04)):
+            gesture_report["controls_keyframed"][label] = bone.name
+            for frame_number, z_delta, x_delta in zip(
+                gesture_frames,
+                (0.0, -0.10, 0.06),
+                (0.0, 0.06, -0.035),
+            ):
+                scene.frame_set(frame_number)
                 bone.rotation_mode = "XYZ"
-                bone.rotation_euler.z = z_rot
-                bone.rotation_euler.x = x_rot
+                bone.rotation_euler.z += z_delta
+                bone.rotation_euler.x += x_delta
                 bone.keyframe_insert(data_path="rotation_euler", frame=frame_number)
-            gesture_report["bones_keyframed"].append(label)
+
+    # O telefone é menor e segue a posição mundial de IK-Hand.R nos três atos.
+    # Se o controle não existir, conserva-se o fallback explícito dentro do close.
+    for part, scale in (
+        (shell, (width * 0.055, height * 0.012, height * 0.078)),
+        (screen, (width * 0.046, height * 0.004, height * 0.064)),
+        (alert, (width * 0.035, height * 0.005, height * 0.016)),
+    ):
+        part.scale = scale
+
+    tracking_bone = pose_bones.get("IK-Hand.R") if pose_bones else None
+    if tracking_bone:
+        gesture_report["phone_anchor"] = tracking_bone.name
+
+    phone_keyframes = (
+        (gesture_frames[0], 0.35),
+        (gesture_frames[1], 1.0),
+        (gesture_frames[2], 0.55),
+    )
+    for frame_number, alert_size in phone_keyframes:
+        scene.frame_set(frame_number)
+        bpy.context.view_layer.update()
+        if tracking_bone:
+            hand_world = armature.matrix_world @ tracking_bone.matrix.translation
+            phone_root.location = hand_world + Vector((
+                width * 0.055,
+                -height * 0.085,
+                height * 0.035,
+            ))
+        else:
+            phone_root.location = (
+                prop_x + width * 0.02,
+                prop_y,
+                prop_z + height * 0.10,
+            )
+        phone_root.keyframe_insert(data_path="location", frame=frame_number)
+        gesture_report["phone_world_positions"].append(
+            [round(value, 6) for value in phone_root.location]
+        )
+        alert.scale.x = width * 0.035 * alert_size
+        alert.keyframe_insert(data_path="scale", frame=frame_number)
 
     for name, color, energy, offset in (
         ("METON-key-pink", (1.0, 0.02, 0.26), 120, (-width * 1.7, -height * 0.5, height * 0.55)),
@@ -337,7 +389,7 @@ def main():
 
     report = {
         "status": "DEVELOPMENT_IDENTITY_PROBE_NOT_APPROVED",
-        "probe_revision": 11,
+        "probe_revision": 12,
         "frames": frames,
         "thematic_prop": "animated_3d_phone_and_pix_alert_development_only",
         "gesture_test": gesture_report,
@@ -346,6 +398,7 @@ def main():
             "children": [part.name for part in phone_parts],
             "base_location": list((prop_x, prop_y, prop_z)),
             "keyframes": [item[0] for item in phone_keyframes],
+            "anchor_control": gesture_report["phone_anchor"],
             "screen_faces_camera": True,
             "camera_motion": "push_in_and_lateral_micro_shift",
         },
@@ -370,7 +423,7 @@ def main():
             "lens_mm": camera.data.lens,
         },
         "warning": (
-            "A prova revisao 10 adiciona movimento real de câmera e mantém olhos castanhos e ancora o celular PIX na faixa inferior do close. Não comprova cabelo longo, "
+            "A prova revisao 12 usa controles reais de mão/cabeça e faz o celular PIX acompanhar IK-Hand.R. Não comprova cabelo longo, "
             "moletom fiel, atuação temática, sincronização labial ou aprovação final."
         ),
     }
