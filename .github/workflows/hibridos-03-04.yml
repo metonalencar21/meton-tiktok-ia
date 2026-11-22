@@ -1,0 +1,60 @@
+name: Renderizar episódios híbridos 03 e 04 — Permissões e Backup
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/hibrido_03_04.py'
+      - '.github/workflows/hibridos-03-04.yml'
+permissions: {contents: write}
+concurrency:
+  group: hibridos-03-04-pilotos
+  cancel-in-progress: false
+jobs:
+  produzir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: Instalar ferramentas gratuitas
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
+          python -m pip install --disable-pip-version-check Pillow numpy edge-tts
+      - name: Compilar scripts e conferir recursos
+        run: |
+          python -m py_compile scripts/hibrido_02_senhas.py scripts/hibrido_03_04.py
+          test -s public/assets/personagem-mestre.jpg
+          test -s public/assets/personagem-permissoes.jpg
+          test -s public/assets/personagem-backup.jpg
+      - name: Produzir os dois pilotos para revisão
+        run: python scripts/hibrido_03_04.py
+      - name: Extrair quadros reais de cada MP4
+        run: |
+          ffmpeg -y -loglevel error -i public/pilotos/hibrido_03_permissoes_celular.mp4 \
+            -vf 'fps=1/10,scale=180:320:flags=lanczos,tile=4x2' \
+            -frames:v 1 -q:v 4 public/pilotos/hibrido_03_preview.jpg
+          ffmpeg -y -loglevel error -i public/pilotos/hibrido_04_backup_fotos.mp4 \
+            -vf 'fps=1/10,scale=180:320:flags=lanczos,tile=4x2' \
+            -frames:v 1 -q:v 4 public/pilotos/hibrido_04_preview.jpg
+          test -s public/pilotos/hibrido_03_preview.jpg
+          test -s public/pilotos/hibrido_04_preview.jpg
+      - name: Guardar apenas os vídeos de teste
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            echo "::error::Branch alterado durante geração; não sobrescrever"
+            exit 1
+          fi
+          git add public/pilotos/hibrido_03* public/pilotos/hibrido_04*
+          if ! git diff --cached --quiet; then
+            git commit -m 'TikTok IA: pilotos híbridos permissões e backup [skip ci]'
+            git push origin HEAD:main
+          fi
+      - name: Não publicar sem revisão
+        run: |
+          echo '## Dois pilotos CGI híbridos produzidos; nenhuma publicação criada.' >> "$GITHUB_STEP_SUMMARY"
