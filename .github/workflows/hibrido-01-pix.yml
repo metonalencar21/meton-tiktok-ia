@@ -1,0 +1,56 @@
+name: Renderizar episódio híbrido 01 — Pix
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/hibrido_01_pix.py'
+      - '.github/workflows/hibrido-01-pix.yml'
+permissions: {contents: write}
+concurrency:
+  group: hibrido-01-pix
+  cancel-in-progress: false
+jobs:
+  gerar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: Preparar renderizador gratuito e voz neural
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
+          python -m pip install --disable-pip-version-check Pillow numpy edge-tts
+      - name: Compilar e validar arquivos
+        run: |
+          python -m py_compile scripts/hibrido_01_pix.py scripts/hibrido_03_04.py scripts/hibrido_02_senhas.py
+          test -s public/assets/personagem-mestre.jpg
+      - name: Gerar MP4 completo para avaliação
+        run: python scripts/hibrido_01_pix.py
+      - name: Extrair quadros do próprio MP4
+        run: |
+          ffmpeg -y -loglevel error -i public/pilotos/hibrido_01_pix_urgente.mp4 \
+            -vf 'fps=1/10,scale=180:320:flags=lanczos,tile=4x2' \
+            -frames:v 1 -q:v 4 public/pilotos/hibrido_01_preview.jpg
+          test -s public/pilotos/hibrido_01_preview.jpg
+      - name: Salvar piloto sem publicação
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            echo "::error::Main mudou; não sobrescrever"
+            exit 1
+          fi
+          git add public/pilotos/hibrido_01_pix_urgente.mp4 \
+                  public/pilotos/hibrido_01_pix_urgente.json \
+                  public/pilotos/hibrido_01_preview.jpg
+          if ! git diff --cached --quiet; then
+            git commit -m 'TikTok IA: piloto híbrido Pix completo com voz [skip ci]'
+            git push origin HEAD:main
+          fi
+      - name: Revisão obrigatória antes de postar
+        run: |
+          echo 'Vídeo híbrido Pix para revisão; nenhuma postagem foi criada.' >> "$GITHUB_STEP_SUMMARY"
