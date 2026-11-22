@@ -1,0 +1,18 @@
+{
+  "title": "Uma senha diferente por conta",
+  "profile": "@metonalencar",
+  "visual_style": "HÍBRIDO CGI + CELULAR ANIMADO",
+  "narration": "pt-BR-FranciscaNeural",
+  "duration_s": 90.6,
+  "scene_count": 10,
+  "format": "720x1280 H264 AAC 30fps",
+  "source_assets": [
+    "public/assets/personagem-mestre.jpg",
+    "public/assets/personagem-senhas.jpg"
+  ],
+  "approved": false,
+  "published": false,
+  "scheduled": false,
+  "status": "review_only",
+  "note": "Personagem usa imagem CGI animada em 2.5D. Não há atuação 3D com sincronização labial."
+}
