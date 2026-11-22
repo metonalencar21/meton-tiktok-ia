@@ -253,9 +253,9 @@ def main():
         part.parent = phone_root
         part.hide_render = False
 
-    # Revisão 14: os controles de atuação continuam explícitos, mas o prop usa
-    # o osso deformador da mão para obter a posição realmente exibida. IK-Hand.R
-    # permaneceu estático no benchmark e projetou o telefone para fora do recorte.
+    # Revisão 15: os controles de atuação continuam explícitos e o prop usa o
+    # osso deformador da mão. O fallback foi recentrado após a revisão 14 provar
+    # que o terceiro deslocamento lateral projetava o telefone em x=1.19.
     gesture_report = {
         "armature": None,
         "controls_keyframed": {},
@@ -390,9 +390,9 @@ def main():
     # visível sem fingir que o controle IK está funcionando.
     gesture_report["phone_world_positions"] = []
     motion_offsets = (
-        Vector((-width * 0.08, 0, -height * 0.025)),
+        Vector((-width * 0.03, 0, -height * 0.025)),
         Vector((0, 0, height * 0.045)),
-        Vector((width * 0.09, 0, -height * 0.01)),
+        Vector((width * 0.03, 0, -height * 0.01)),
     )
     for index, (frame, motion) in enumerate(zip(frames, motion_offsets), 1):
         scene.frame_set(frame)
@@ -411,13 +411,13 @@ def main():
                 anchor_source = tracking_bone.name
             else:
                 phone_root.location = Vector((
-                    center.x + width * 0.12,
+                    center.x,
                     minimum.y - height * 0.08,
                     minimum.z + height * 0.55,
                 )) + motion
         else:
             phone_root.location = Vector((
-                center.x + width * 0.12,
+                center.x,
                 minimum.y - height * 0.08,
                 minimum.z + height * 0.55,
             )) + motion
@@ -436,7 +436,7 @@ def main():
 
     report = {
         "status": "DEVELOPMENT_IDENTITY_PROBE_NOT_APPROVED",
-        "probe_revision": 14,
+        "probe_revision": 15,
         "frames": frames,
         "thematic_prop": "animated_3d_phone_and_pix_alert_development_only",
         "gesture_test": gesture_report,
@@ -470,7 +470,7 @@ def main():
             "lens_mm": camera.data.lens,
         },
         "warning": (
-            "A prova revisao 14 usa os controles reais de atuação, rastreia DEF-Hand.R e exige projeção do celular PIX dentro do quadro. Não comprova cabelo longo, "
+            "A prova revisao 15 usa os controles reais de atuação, rastreia DEF-Hand.R e recentra o fallback do celular PIX dentro do quadro. Não comprova cabelo longo, "
             "moletom fiel, atuação temática, sincronização labial ou aprovação final."
         ),
     }
