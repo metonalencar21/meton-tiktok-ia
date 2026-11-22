@@ -1,0 +1,60 @@
+name: Renderizar episódio híbrido 02 — Senhas
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/hibrido_02_senhas.py'
+      - '.github/workflows/hibrido-02-senhas.yml'
+permissions:
+  contents: write
+concurrency:
+  group: hibrido-senhas-piloto
+  cancel-in-progress: false
+jobs:
+  produzir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Instalar ferramentas gratuitas
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
+          python -m pip install --disable-pip-version-check Pillow numpy edge-tts
+      - name: Verificar código e referências da personagem
+        run: |
+          python -m py_compile scripts/hibrido_02_senhas.py
+          test -s public/assets/personagem-mestre.jpg
+          test -s public/assets/personagem-senhas.jpg
+      - name: Gerar vídeo híbrido com voz neural pt-BR
+        run: python scripts/hibrido_02_senhas.py
+      - name: Capturar quadros reais para revisão
+        run: |
+          ffmpeg -y -loglevel error -i public/pilotos/hibrido_02_senhas_diferentes.mp4 \
+            -vf 'fps=1/10,scale=180:320:flags=lanczos,tile=4x2' \
+            -frames:v 1 -q:v 4 public/pilotos/hibrido_02_senhas_preview.jpg
+          test -s public/pilotos/hibrido_02_senhas_preview.jpg
+      - name: Guardar somente piloto no GitHub — NÃO POSTAR
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            echo "::warning::Main mudou, não sobrescrever arquivos de outra execução"
+            exit 1
+          fi
+          git add public/pilotos/hibrido_02_senhas_diferentes.mp4 \
+                  public/pilotos/hibrido_02_senhas_diferentes.json \
+                  public/pilotos/hibrido_02_senhas_preview.jpg
+          if ! git diff --cached --quiet; then
+            git commit -m 'TikTok IA: piloto híbrido senhas + revisão visual [skip ci]'
+            git push origin HEAD:main
+          fi
+      - name: Registrar limites
+        run: |
+          echo '## Piloto híbrido de senhas — NÃO POSTADO' >> "$GITHUB_STEP_SUMMARY"
+          cat public/pilotos/hibrido_02_senhas_diferentes.json >> "$GITHUB_STEP_SUMMARY"
