@@ -36,13 +36,13 @@ engine.SCRIPT["pix"]={"slug":"hibrido_01_pix_urgente","footer":"PIX URGENTE? PAR
                        "title":"Golpe do Pix urgente","scenes":STORY}
 
 def cell_pix(im,kind,local,dt,t):
+    rr=base.rr
     d=ImageDraw.Draw(im)
     x,y,w,h=base.phone(d,70,202,400,586)
     phase=int(max(0,min(1,local/max(.1,dt)))*4)
     if kind in ("chat","profile","transfer","stop","compare"):
         base.txt(d,(x+34,y+64),"MENSAGENS" if kind in ("chat","profile","compare") else "CONFIRMAR PIX",21)
         if kind in ("chat","profile","compare"):
-            rr=base.rr
             rr(d,(x+35,y+136,x+w-35,y+187),15,(40,50,91),(93,110,164),2)
             base.txt(d,(x+51,y+149),"CONTATO CONHECIDO",16)
             bubbles=[
