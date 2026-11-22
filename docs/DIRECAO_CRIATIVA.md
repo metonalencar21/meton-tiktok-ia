@@ -1,5 +1,20 @@
 # Direção criativa oficial — @metonalencar
 
+## Atualização de 22/11/2026 — formato híbrido em avaliação
+
+O usuário achou a prévia híbrida de Pix mais interessante que os testes anteriores e autorizou continuar a produção. O formato escolhido para testar agora preserva a MESMA apresentadora feminina CGI e combina aberturas/encerramentos com ela, animações demonstrativas de celular, alertas, cortes e narração neural pt-BR. Não confundir esta autorização para PRODUZIR com aprovação final para PUBLICAR; o usuário havia pedido para assistir aos novos vídeos antes.
+
+Foi produzido em 22/11 no GitHub, sem postagem:
+- Vídeo 02: public/pilotos/hibrido_02_senhas_diferentes.mp4, 90,6 s, 10 trechos, voz neural. Prévia hibrido_02_senhas_preview.jpg. Workflow hibrido-02-senhas.yml.
+- Vídeo 03: public/pilotos/hibrido_03_permissoes_celular.mp4, 93,8 s, 10 trechos, voz neural. Prévia hibrido_03_preview.jpg. Workflow hibridos-03-04.yml.
+- Vídeo 04: public/pilotos/hibrido_04_backup_fotos.mp4, 91,1 s, 10 trechos, voz neural. Prévia hibrido_04_preview.jpg. Workflow hibridos-03-04.yml.
+
+Os três pilotos usam personagem CGI (imagem 2.5D) com demonstrações de interfaces móveis animadas, não atuação 3D cinematográfica e nem lip-sync profissional. A aparência da personagem segue a identidade. O usuário ainda precisa avaliar o vídeo completo, incluindo ritmo de cenas, áudio e clareza; os metadados continuam approved:false, scheduled:false e published:false.
+
+**Próxima ação:** concluir um episódio 01 de Pix no mesmo formato híbrido (o Pix CGI 95,3 s de 08/11 não é automaticamente equivalente), inspecionar os quatro e, somente após aprovação de qualidade e confirmação de funcionamento da rotina, considerar publicação pelo Metricool sem duplicações. Não reativar a antiga geração de slides.
+
+---
+
 **Referência principal:** a arte de identidade do canal reenviada pelo usuário no chat em 01/11/2026 (painel rosa intitulado "IDENTIDADE DO CANAL / MASCOTE OFICIAL / ESTILO DOS VÍDEOS" e quatro exemplos Golpe do Pix, Senha por Conta, Permissões e Backup).
 Esta referência prevalece sobre propostas posteriores de robô 2D, ícones e slides narrados.
 
