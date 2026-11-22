@@ -467,7 +467,8 @@ def main():
 
     report = {
         "status": "DEVELOPMENT_IDENTITY_PROBE_NOT_APPROVED",
-        "probe_revision": 17,\n        "hair_silhouette_strands": hair_strands,
+        "probe_revision": 17,
+        "hair_silhouette_strands": hair_strands,
         "frames": frames,
         "thematic_prop": "animated_3d_phone_and_pix_alert_development_only",
         "gesture_test": gesture_report,
