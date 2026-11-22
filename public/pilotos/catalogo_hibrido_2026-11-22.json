@@ -1,0 +1,53 @@
+{
+  "profile": "@metonalencar",
+  "timezone": "America/Fortaleza",
+  "created_at": "2026-11-22",
+  "series": "PILOTOS HÍBRIDOS CGI + TELAS ANIMADAS",
+  "status": "review_only",
+  "approved": false,
+  "scheduled": false,
+  "published": false,
+  "note": "Quatro vídeos completos com voz neural pt-BR; personagem CGI 2.5D nas aberturas e telas de celular animadas. Sem atuação 3D articulada nem lip-sync profissional. Exigem avaliação visual antes de publicar.",
+  "videos": [
+    {
+      "number": 1,
+      "id": "hibrido-01-pix",
+      "title": "Golpe do Pix urgente",
+      "duration_s": 90,
+      "file": "public/pilotos/hibrido_01_pix_urgente.mp4",
+      "preview": "public/pilotos/hibrido_01_preview.jpg",
+      "meta": "public/pilotos/hibrido_01_pix_urgente.json",
+      "workflow_run": 45070479997
+    },
+    {
+      "number": 2,
+      "id": "hibrido-02-senhas",
+      "title": "Uma senha diferente por conta",
+      "duration_s": 90.6,
+      "file": "public/pilotos/hibrido_02_senhas_diferentes.mp4",
+      "preview": "public/pilotos/hibrido_02_senhas_preview.jpg",
+      "meta": "public/pilotos/hibrido_02_senhas_diferentes.json",
+      "workflow_run": 45069471467
+    },
+    {
+      "number": 3,
+      "id": "hibrido-03-permissoes",
+      "title": "Permissões do celular",
+      "duration_s": 93.8,
+      "file": "public/pilotos/hibrido_03_permissoes_celular.mp4",
+      "preview": "public/pilotos/hibrido_03_preview.jpg",
+      "meta": "public/pilotos/hibrido_03_permissoes_celular.json",
+      "workflow_run": 45069824087
+    },
+    {
+      "number": 4,
+      "id": "hibrido-04-backup",
+      "title": "Backup das fotos",
+      "duration_s": 91.1,
+      "file": "public/pilotos/hibrido_04_backup_fotos.mp4",
+      "preview": "public/pilotos/hibrido_04_preview.jpg",
+      "meta": "public/pilotos/hibrido_04_backup_fotos.json",
+      "workflow_run": 45069824087
+    }
+  ]
+}
