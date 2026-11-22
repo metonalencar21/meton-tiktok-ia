@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "status": "development_only_not_approved",
+  "fps": 30,
+  "aspect_ratio": "9:16",
+  "identity": {
+    "character": "female CGI 3D",
+    "hair": "long dark brown",
+    "eyes": "large brown",
+    "outfit": "black hoodie with pink trim and emblem",
+    "lighting": "pink violet blue neon"
+  },
+  "requirements": {
+    "scene_change_seconds": [
+      2,
+      4
+    ],
+    "voice": "pt-BR",
+    "captions": "dynamic",
+    "forbidden": [
+      "slides",
+      "2D NEXO",
+      "geometric mascot",
+      "single still with zoom"
+    ],
+    "release_gate": "Four distinct visually reviewed complete MP4s; user pilot approval; Metricool verified"
+  },
+  "episodes": [
+    {
+      "id": "pix",
+      "title": "Golpe do Pix urgente",
+      "shots": [
+        [
+          "0-3",
+          "celular vibra, personagem reage ao pedido urgente"
+        ],
+        [
+          "3-6",
+          "mensagem com pressão de tempo aparece na tela 3D"
+        ],
+        [
+          "6-9",
+          "personagem aproxima celular e examina remetente"
+        ],
+        [
+          "9-12",
+          "abre contato conhecido por outro canal"
+        ],
+        [
+          "12-15",
+          "contato confirma que não pediu dinheiro"
+        ],
+        [
+          "15-18",
+          "personagem bloqueia e denuncia"
+        ],
+        [
+          "18-21",
+          "resumo visual: pare, confira, confirme"
+        ]
+      ]
+    },
+    {
+      "id": "senhas",
+      "title": "Senha repetida",
+      "shots": [
+        [
+          "0-3",
+          "personagem observa dois logins alertando risco"
+        ],
+        [
+          "3-6",
+          "mesma senha abre duas portas virtuais"
+        ],
+        [
+          "6-9",
+          "vazamento em uma porta ameaça a outra"
+        ],
+        [
+          "9-12",
+          "personagem ativa gerenciador de senhas"
+        ],
+        [
+          "12-15",
+          "gera senhas distintas no celular"
+        ],
+        [
+          "15-18",
+          "ativa autenticação em dois fatores"
+        ],
+        [
+          "18-21",
+          "duas portas protegidas, conclusão"
+        ]
+      ]
+    },
+    {
+      "id": "permissoes",
+      "title": "Aplicativo pedindo acesso demais",
+      "shots": [
+        [
+          "0-3",
+          "app de lanterna pede microfone e contatos"
+        ],
+        [
+          "3-6",
+          "personagem demonstra surpresa e toca em negar"
+        ],
+        [
+          "6-9",
+          "abre configurações do aplicativo"
+        ],
+        [
+          "9-12",
+          "mostra permissões solicitadas"
+        ],
+        [
+          "12-15",
+          "desativa microfone e contatos"
+        ],
+        [
+          "15-18",
+          "demonstra lanterna funcionando sem acesso"
+        ],
+        [
+          "18-21",
+          "reforça revisar permissões periodicamente"
+        ]
+      ]
+    },
+    {
+      "id": "backup",
+      "title": "Backup antes do susto",
+      "shots": [
+        [
+          "0-3",
+          "celular cai e personagem reage"
+        ],
+        [
+          "3-6",
+          "fotos aparecem ameaçadas na tela"
+        ],
+        [
+          "6-9",
+          "personagem abre configurações de backup"
+        ],
+        [
+          "9-12",
+          "seleciona fotos e arquivos importantes"
+        ],
+        [
+          "12-15",
+          "animação 3D de sincronização na nuvem"
+        ],
+        [
+          "15-18",
+          "confere cópia em segundo dispositivo"
+        ],
+        [
+          "18-21",
+          "restauração demonstrada e fechamento"
+        ]
+      ]
+    }
+  ]
+}
