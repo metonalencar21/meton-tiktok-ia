@@ -253,9 +253,9 @@ def main():
         part.parent = phone_root
         part.hide_render = False
 
-    # Revisão 15: os controles de atuação continuam explícitos e o prop usa o
-    # osso deformador da mão. O fallback foi recentrado após a revisão 14 provar
-    # que o terceiro deslocamento lateral projetava o telefone em x=1.19.
+    # Revisão 16: os controles de atuação continuam explícitos e o prop usa o
+    # osso deformador da mão. As curvas antigas do phone_root são removidas antes
+    # do render para impedir a reavaliação que ocultou o prop na revisão 15.
     gesture_report = {
         "armature": None,
         "controls_keyframed": {},
@@ -383,6 +383,9 @@ def main():
         scene.frame_start + int(span * 0.50),
         scene.frame_start + int(span * 0.84),
     ]
+    # Os keyframes de diagnóstico criados acima não podem competir com a posição
+    # final calculada por quadro: o render reavalia FCurves ao iniciar.
+    phone_root.animation_data_clear()
     rendered = []
     # Registra e renderiza a posição real do telefone nos mesmos quadros usados
     # na revisão visual. DEF-Hand.R acompanha a malha; se a projeção sair do
@@ -436,7 +439,7 @@ def main():
 
     report = {
         "status": "DEVELOPMENT_IDENTITY_PROBE_NOT_APPROVED",
-        "probe_revision": 15,
+        "probe_revision": 16,
         "frames": frames,
         "thematic_prop": "animated_3d_phone_and_pix_alert_development_only",
         "gesture_test": gesture_report,
@@ -470,7 +473,7 @@ def main():
             "lens_mm": camera.data.lens,
         },
         "warning": (
-            "A prova revisao 15 usa os controles reais de atuação, rastreia DEF-Hand.R e recentra o fallback do celular PIX dentro do quadro. Não comprova cabelo longo, "
+            "A prova revisao 16 usa os controles reais de atuação, rastreia DEF-Hand.R, recentra o fallback e remove FCurves conflitantes do celular PIX. Não comprova cabelo longo, "
             "moletom fiel, atuação temática, sincronização labial ou aprovação final."
         ),
     }
