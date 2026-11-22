@@ -38,6 +38,11 @@ engine.SCRIPT["pix"]={"slug":"hibrido_01_pix_urgente","footer":"PIX URGENTE? PAR
 def cell_pix(im,kind,local,dt,t):
     rr=base.rr
     d=ImageDraw.Draw(im)
+    if kind in ('hook','cta'):
+        rr(d,(28,590,510,716),20,(16,20,58),PINK,3)
+        base.txt(d,(48,610),'PIX URGENTE?',26,YELLOW)
+        base.txt(d,(48,656),'PARE E CONFIRME!' if kind=='hook' else 'SALVE E COMPARTILHE',19,CYAN)
+        return
     x,y,w,h=base.phone(d,70,202,400,586)
     phase=int(max(0,min(1,local/max(.1,dt)))*4)
     if kind in ("chat","profile","transfer","stop","compare"):
