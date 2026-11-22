@@ -14,6 +14,7 @@ import sys
 
 import bpy
 from mathutils import Vector
+from bpy_extras.object_utils import world_to_camera_view
 
 
 def parse_args() -> argparse.Namespace:
@@ -252,14 +253,16 @@ def main():
         part.parent = phone_root
         part.hide_render = False
 
-    # Revisão 13: usar os controles reais do rig Rain e manter o telefone
-    # próximo da mão direita, mas sempre à frente da malha. A revisão 12 mapeou
-    # os controles corretamente, porém o telefone ficou ocluído pelo corpo.
+    # Revisão 14: os controles de atuação continuam explícitos, mas o prop usa
+    # o osso deformador da mão para obter a posição realmente exibida. IK-Hand.R
+    # permaneceu estático no benchmark e projetou o telefone para fora do recorte.
     gesture_report = {
         "armature": None,
         "controls_keyframed": {},
         "phone_anchor": None,
         "phone_world_positions": [],
+        "phone_view_positions": [],
+        "phone_anchor_sources": [],
     }
     armatures = [
         obj for obj in bpy.data.objects
@@ -296,9 +299,8 @@ def main():
                 bone.rotation_euler.x += x_delta
                 bone.keyframe_insert(data_path="rotation_euler", frame=frame_number)
 
-    # O telefone é menor e segue a posição mundial de IK-Hand.R nos três atos.
-    # O eixo Y recebe folga negativa suficiente para deixá-lo à frente da malha,
-    # preservando a tela voltada para a câmera.
+    # O telefone é menor e segue a mão deformada nos três atos. A validação
+    # posterior registra também a projeção normalizada na câmera.
     for part, scale in (
         (shell, (width * 0.055, height * 0.012, height * 0.078)),
         (screen, (width * 0.046, height * 0.004, height * 0.064)),
@@ -306,7 +308,7 @@ def main():
     ):
         part.scale = scale
 
-    tracking_bone = pose_bones.get("IK-Hand.R") if pose_bones else None
+    tracking_bone = pose_bones.get("DEF-Hand.R") if pose_bones else None
     if tracking_bone:
         gesture_report["phone_anchor"] = tracking_bone.name
 
@@ -321,8 +323,8 @@ def main():
         if tracking_bone:
             hand_world = armature.matrix_world @ tracking_bone.matrix.translation
             phone_root.location = hand_world + Vector((
-                width * 0.12,
-                -height * 0.20,
+                width * 0.08,
+                -height * 0.08,
                 height * 0.01,
             ))
         else:
@@ -383,35 +385,58 @@ def main():
     ]
     rendered = []
     # Registra e renderiza a posição real do telefone nos mesmos quadros usados
-    # na revisão visual. Isso evita validar apenas keyframes intermediários.
+    # na revisão visual. DEF-Hand.R acompanha a malha; se a projeção sair do
+    # recorte vertical, um fallback animado e próximo das mãos mantém o prop
+    # visível sem fingir que o controle IK está funcionando.
     gesture_report["phone_world_positions"] = []
-    for index, frame in enumerate(frames, 1):
+    motion_offsets = (
+        Vector((-width * 0.08, 0, -height * 0.025)),
+        Vector((0, 0, height * 0.045)),
+        Vector((width * 0.09, 0, -height * 0.01)),
+    )
+    for index, (frame, motion) in enumerate(zip(frames, motion_offsets), 1):
         scene.frame_set(frame)
         bpy.context.view_layer.update()
+        anchor_source = "fallback_in_frame"
         if tracking_bone:
             hand_world = armature.matrix_world @ tracking_bone.matrix.translation
-            phone_root.location = hand_world + Vector((
-                width * 0.12,
-                -height * 0.20,
+            candidate = hand_world + Vector((
+                width * 0.06,
+                -height * 0.08,
                 height * 0.01,
-            ))
+            )) + motion
+            projected = world_to_camera_view(scene, camera, candidate)
+            if 0.16 <= projected.x <= 0.84 and 0.18 <= projected.y <= 0.82 and projected.z > 0:
+                phone_root.location = candidate
+                anchor_source = tracking_bone.name
+            else:
+                phone_root.location = Vector((
+                    center.x + width * 0.12,
+                    minimum.y - height * 0.08,
+                    minimum.z + height * 0.55,
+                )) + motion
         else:
-            phone_root.location = (
-                prop_x + width * 0.02,
-                minimum.y - height * 0.20,
-                prop_z + height * 0.10,
-            )
+            phone_root.location = Vector((
+                center.x + width * 0.12,
+                minimum.y - height * 0.08,
+                minimum.z + height * 0.55,
+            )) + motion
         bpy.context.view_layer.update()
+        projected = world_to_camera_view(scene, camera, phone_root.location)
         gesture_report["phone_world_positions"].append(
             [round(value, 6) for value in phone_root.location]
         )
+        gesture_report["phone_view_positions"].append(
+            [round(projected.x, 6), round(projected.y, 6), round(projected.z, 6)]
+        )
+        gesture_report["phone_anchor_sources"].append(anchor_source)
         scene.render.filepath = str(out / f"identidade-rig-{index:02d}.png")
         bpy.ops.render.render(write_still=True)
         rendered.append(scene.render.filepath)
 
     report = {
         "status": "DEVELOPMENT_IDENTITY_PROBE_NOT_APPROVED",
-        "probe_revision": 13,
+        "probe_revision": 14,
         "frames": frames,
         "thematic_prop": "animated_3d_phone_and_pix_alert_development_only",
         "gesture_test": gesture_report,
@@ -445,7 +470,7 @@ def main():
             "lens_mm": camera.data.lens,
         },
         "warning": (
-            "A prova revisao 13 usa controles reais de mão/cabeça e mantém o celular PIX à frente da malha ao acompanhar IK-Hand.R. Não comprova cabelo longo, "
+            "A prova revisao 14 usa os controles reais de atuação, rastreia DEF-Hand.R e exige projeção do celular PIX dentro do quadro. Não comprova cabelo longo, "
             "moletom fiel, atuação temática, sincronização labial ou aprovação final."
         ),
     }
