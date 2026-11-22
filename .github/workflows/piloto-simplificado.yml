@@ -1,0 +1,35 @@
+name: Produzir piloto animado 3D simplificado
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/render_piloto_simplificado.py'
+      - '.github/workflows/piloto-simplificado.yml'
+permissions:
+  contents: read
+jobs:
+  piloto:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar Blender, FFmpeg e voz pt-BR
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq blender ffmpeg espeak-ng xvfb libegl1 libgl1-mesa-dri
+      - name: Renderizar 12 segundos de animação 3D real
+        run: |
+          mkdir -p /tmp/piloto-frames public/development/piloto-simplificado
+          xvfb-run -a blender -b -t 2 --python scripts/render_piloto_simplificado.py -- /tmp/piloto-frames
+          test "$(find /tmp/piloto-frames -name '*.png' | wc -l)" -eq 144
+      - name: Narração e montagem MP4
+        run: |
+          espeak-ng -v pt-br -s 145 -w /tmp/voz.wav "Cuidado com o golpe do Pix! Antes de transferir, confira o nome de quem vai receber. Se alguém pedir urgência, desconfie. Segurança começa com uma pausa."
+          ffmpeg -hide_banner -loglevel error -y -framerate 12 -i /tmp/piloto-frames/%04d.png -i /tmp/voz.wav -filter_complex "[0:v]fps=24,format=yuv420p[v];[1:a]apad[a]" -map "[v]" -map "[a]" -t 12 -c:v libx264 -preset veryfast -crf 24 -c:a aac -movflags +faststart public/development/piloto-simplificado/piloto-pix-3d.mp4
+          ffprobe -v error -show_entries format=duration -of default=nw=1 public/development/piloto-simplificado/piloto-pix-3d.mp4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: piloto-pix-3d-simplificado
+          path: public/development/piloto-simplificado/piloto-pix-3d.mp4
+          retention-days: 14
