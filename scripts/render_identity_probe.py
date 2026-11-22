@@ -219,6 +219,34 @@ def main():
     height = max(size.z, 1.0)
     width = max(size.x, 0.5)
 
+    # Desenvolvimento visual: mechas longas de cabelo castanho em geometria 3D.
+    # Prova de silhueta, não substitui cabelo modelado e preso ao rig.
+    hair_mat = make_material("METON-long-brown-hair", (0.048, 0.012, 0.009, 1))
+    hair_strands = []
+    for side in (-1, 1):
+        for strand_index in range(7):
+            strand = bpy.data.curves.new(f"METON-hair-{side}-{strand_index}", "CURVE")
+            strand.dimensions = "3D"
+            strand.bevel_depth = width * 0.009
+            strand.bevel_resolution = 3
+            spline = strand.splines.new("BEZIER")
+            spline.bezier_points.add(3)
+            lateral = side * width * (0.24 + strand_index * 0.013)
+            points = [
+                (center.x + lateral * 0.70, center.y, maximum.z - height * 0.10),
+                (center.x + lateral, center.y + height * 0.005, maximum.z - height * 0.25),
+                (center.x + lateral * 1.08, center.y - height * 0.015, maximum.z - height * 0.42),
+                (center.x + lateral * 0.92, center.y + height * 0.01, maximum.z - height * 0.57),
+            ]
+            for point, position in zip(spline.bezier_points, points):
+                point.co = position
+                point.handle_left_type = "AUTO"
+                point.handle_right_type = "AUTO"
+            hair_obj = bpy.data.objects.new(strand.name, strand)
+            bpy.context.collection.objects.link(hair_obj)
+            strand.materials.append(hair_mat)
+            hair_strands.append(hair_obj.name)
+
     dark = make_material("METON-neon-dark", (0.006, 0.002, 0.025, 1))
     pink = make_material("METON-neon-pink", (0.95, 0.005, 0.32, 1), 7.0)
     cyan = make_material("METON-neon-cyan", (0.005, 0.38, 0.62, 1), 5.0)
@@ -439,7 +467,7 @@ def main():
 
     report = {
         "status": "DEVELOPMENT_IDENTITY_PROBE_NOT_APPROVED",
-        "probe_revision": 16,
+        "probe_revision": 17,\n        "hair_silhouette_strands": hair_strands,
         "frames": frames,
         "thematic_prop": "animated_3d_phone_and_pix_alert_development_only",
         "gesture_test": gesture_report,
@@ -473,7 +501,7 @@ def main():
             "lens_mm": camera.data.lens,
         },
         "warning": (
-            "A prova revisao 16 usa os controles reais de atuação, rastreia DEF-Hand.R, recentra o fallback e remove FCurves conflitantes do celular PIX. Não comprova cabelo longo, "
+            "A prova revisao 17 adiciona mechas longas 3D experimentais e usa os controles reais de atuação, rastreia DEF-Hand.R, recentra o fallback e remove FCurves conflitantes do celular PIX. Não comprova cabelo longo, "
             "moletom fiel, atuação temática, sincronização labial ou aprovação final."
         ),
     }
