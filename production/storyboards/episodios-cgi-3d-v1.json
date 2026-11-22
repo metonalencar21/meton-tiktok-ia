@@ -30,137 +30,178 @@
       "id": "pix",
       "title": "Golpe do Pix urgente",
       "shots": [
-        [
-          "0-3",
-          "celular vibra, personagem reage ao pedido urgente"
-        ],
-        [
-          "3-6",
-          "mensagem com pressão de tempo aparece na tela 3D"
-        ],
-        [
-          "6-9",
-          "personagem aproxima celular e examina remetente"
-        ],
-        [
-          "9-12",
-          "abre contato conhecido por outro canal"
-        ],
-        [
-          "12-15",
-          "contato confirma que não pediu dinheiro"
-        ],
-        [
-          "15-18",
-          "personagem bloqueia e denuncia"
-        ],
-        [
-          "18-21",
-          "resumo visual: pare, confira, confirme"
-        ]
-      ]
+        {
+          "time": "0-3",
+          "description": "celular vibra, personagem reage ao pedido urgente",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "3-6",
+          "description": "mensagem com pressão de tempo aparece na tela 3D",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "6-9",
+          "description": "personagem aproxima celular e examina remetente",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "9-12",
+          "description": "abre contato conhecido por outro canal",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "12-15",
+          "description": "contato confirma que não pediu dinheiro",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "15-18",
+          "description": "personagem bloqueia e denuncia",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "18-21",
+          "description": "resumo visual: pare, confira, confirme",
+          "production_status": "planned_not_rendered"
+        }
+      ],
+      "approval": "not_approved",
+      "audio_status": "not_recorded",
+      "render_status": "not_rendered"
     },
     {
       "id": "senhas",
       "title": "Senha repetida",
       "shots": [
-        [
-          "0-3",
-          "personagem observa dois logins alertando risco"
-        ],
-        [
-          "3-6",
-          "mesma senha abre duas portas virtuais"
-        ],
-        [
-          "6-9",
-          "vazamento em uma porta ameaça a outra"
-        ],
-        [
-          "9-12",
-          "personagem ativa gerenciador de senhas"
-        ],
-        [
-          "12-15",
-          "gera senhas distintas no celular"
-        ],
-        [
-          "15-18",
-          "ativa autenticação em dois fatores"
-        ],
-        [
-          "18-21",
-          "duas portas protegidas, conclusão"
-        ]
-      ]
+        {
+          "time": "0-3",
+          "description": "personagem observa dois logins alertando risco",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "3-6",
+          "description": "mesma senha abre duas portas virtuais",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "6-9",
+          "description": "vazamento em uma porta ameaça a outra",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "9-12",
+          "description": "personagem ativa gerenciador de senhas",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "12-15",
+          "description": "gera senhas distintas no celular",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "15-18",
+          "description": "ativa autenticação em dois fatores",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "18-21",
+          "description": "duas portas protegidas, conclusão",
+          "production_status": "planned_not_rendered"
+        }
+      ],
+      "approval": "not_approved",
+      "audio_status": "not_recorded",
+      "render_status": "not_rendered"
     },
     {
       "id": "permissoes",
       "title": "Aplicativo pedindo acesso demais",
       "shots": [
-        [
-          "0-3",
-          "app de lanterna pede microfone e contatos"
-        ],
-        [
-          "3-6",
-          "personagem demonstra surpresa e toca em negar"
-        ],
-        [
-          "6-9",
-          "abre configurações do aplicativo"
-        ],
-        [
-          "9-12",
-          "mostra permissões solicitadas"
-        ],
-        [
-          "12-15",
-          "desativa microfone e contatos"
-        ],
-        [
-          "15-18",
-          "demonstra lanterna funcionando sem acesso"
-        ],
-        [
-          "18-21",
-          "reforça revisar permissões periodicamente"
-        ]
-      ]
+        {
+          "time": "0-3",
+          "description": "app de lanterna pede microfone e contatos",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "3-6",
+          "description": "personagem demonstra surpresa e toca em negar",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "6-9",
+          "description": "abre configurações do aplicativo",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "9-12",
+          "description": "mostra permissões solicitadas",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "12-15",
+          "description": "desativa microfone e contatos",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "15-18",
+          "description": "demonstra lanterna funcionando sem acesso",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "18-21",
+          "description": "reforça revisar permissões periodicamente",
+          "production_status": "planned_not_rendered"
+        }
+      ],
+      "approval": "not_approved",
+      "audio_status": "not_recorded",
+      "render_status": "not_rendered"
     },
     {
       "id": "backup",
       "title": "Backup antes do susto",
       "shots": [
-        [
-          "0-3",
-          "celular cai e personagem reage"
-        ],
-        [
-          "3-6",
-          "fotos aparecem ameaçadas na tela"
-        ],
-        [
-          "6-9",
-          "personagem abre configurações de backup"
-        ],
-        [
-          "9-12",
-          "seleciona fotos e arquivos importantes"
-        ],
-        [
-          "12-15",
-          "animação 3D de sincronização na nuvem"
-        ],
-        [
-          "15-18",
-          "confere cópia em segundo dispositivo"
-        ],
-        [
-          "18-21",
-          "restauração demonstrada e fechamento"
-        ]
-      ]
+        {
+          "time": "0-3",
+          "description": "celular cai e personagem reage",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "3-6",
+          "description": "fotos aparecem ameaçadas na tela",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "6-9",
+          "description": "personagem abre configurações de backup",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "9-12",
+          "description": "seleciona fotos e arquivos importantes",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "12-15",
+          "description": "animação 3D de sincronização na nuvem",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "15-18",
+          "description": "confere cópia em segundo dispositivo",
+          "production_status": "planned_not_rendered"
+        },
+        {
+          "time": "18-21",
+          "description": "restauração demonstrada e fechamento",
+          "production_status": "planned_not_rendered"
+        }
+      ],
+      "approval": "not_approved",
+      "audio_status": "not_recorded",
+      "render_status": "not_rendered"
     }
-  ]
+  ],
+  "production_note": "Storyboard only. 21-second shot maps are not complete episodes. Do not upload, schedule or publish until full audiovisual review and user pilot approval."
 }
