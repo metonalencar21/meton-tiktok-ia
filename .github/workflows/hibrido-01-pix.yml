@@ -39,16 +39,12 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git fetch origin main
-          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
-            echo "::error::Main mudou; não sobrescrever"
-            exit 1
-          fi
           git add public/pilotos/hibrido_01_pix_urgente.mp4 \
                   public/pilotos/hibrido_01_pix_urgente.json \
                   public/pilotos/hibrido_01_preview.jpg
           if ! git diff --cached --quiet; then
             git commit -m 'TikTok IA: piloto híbrido Pix completo com voz [skip ci]'
+            git pull --rebase origin main
             git push origin HEAD:main
           fi
       - name: Revisão obrigatória antes de postar
