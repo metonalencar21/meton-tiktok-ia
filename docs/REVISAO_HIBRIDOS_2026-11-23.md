@@ -36,6 +36,32 @@ ausente; o bloqueio é criativo e de ritmo visual.
 Essas mudanças ainda precisam gerar uma nova versão dos quatro MP4s e passar por
 nova revisão audiovisual. Elas não equivalem a aprovação criativa.
 
+## Resultado após duas renderizações corretivas
+
+Os workflows foram consolidados para salvar renders concorrentes com `git pull
+--rebase`, evitando que um episódio sobrescreva o outro. Os quatro jobs finais
+concluíram com sucesso:
+
+- Pix: Actions `45173098412`, commit de mídia `0669456`;
+- Senhas: Actions `45173098375`, commit de mídia `26e984f`;
+- Permissões e Backup: Actions `45173098370`, commit de mídia `450c066`.
+
+Nova medição nos MP4s persistidos:
+
+| Episódio | Quase estático | Maior trecho quase estático | Gate de movimento |
+|---|---:|---:|---|
+| Pix urgente | 40,2% | 3,0 s | passa |
+| Senhas | 15,6% | 3,0 s | passa |
+| Permissões | 20,3% | 2,0 s | passa |
+| Backup | 12,2% | 2,0 s | passa |
+
+A correção eliminou os trechos parados de 9,5–10 segundos, adicionou alvos de
+toque perceptíveis e legendas curtas com progresso. A revisão das folhas de
+contato, porém, ainda mostra predominância de interfaces 2.5D e a apresentadora
+principalmente na abertura/encerramento. Portanto os arquivos continuam como
+**pilotos em avaliação**, não candidatos finais; a aprovação visual do usuário
+ainda é obrigatória antes de qualquer agendamento.
+
 ## Metricool
 
 Consulta ao brandId `7349860`, fuso `America/Fortaleza`, de 23/11 a 23/12/2026:
@@ -44,9 +70,8 @@ agendamento foi criado nesta revisão.
 
 ## Próximo gate
 
-1. Renderizar novamente os quatro episódios com o motor corrigido.
-2. Gerar folhas de contato e medir movimento, áudio e legibilidade.
-3. Submeter o formato visual ao usuário para uma única aprovação explícita.
-4. Somente depois produzir candidatos finais fora de `public/pilotos/`, executar
+1. Aumentar presença da apresentadora em momentos-chave sem voltar a foto única.
+2. Submeter o formato visual ao usuário para uma única aprovação explícita.
+3. Somente depois produzir candidatos finais fora de `public/pilotos/`, executar
    `scripts/validate_release_gate.py` e consultar novamente o Metricool.
 
