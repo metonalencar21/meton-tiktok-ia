@@ -95,6 +95,22 @@ def pill(d,xy,text,bg,fg=WHITE,size=19):
     rr(d,(x,y,x+tw+28,y+38),14,bg)
     txt(d,(x+14,y+7),text,size,fg)
 
+def short_caption(spoken,local,dt,max_words=7):
+    """Seleciona uma legenda curta seguindo a narração, sem parágrafo fixo."""
+    words=spoken.split()
+    if not words:return ""
+    chunks=[words[i:i+max_words] for i in range(0,len(words),max_words)]
+    index=min(len(chunks)-1,int((local/max(.1,dt))*len(chunks)))
+    return " ".join(chunks[index]).upper()
+
+def action_pulse(d,x,y,t,color=CYAN):
+    """Toque visível na interface: anel pulsante + ponto de contato."""
+    phase=(t*2.2)%1
+    radius=13+int(22*phase)
+    alpha_color=tuple(int(c*(1-.45*phase)) for c in color)
+    d.ellipse((x-radius,y-radius,x+radius,y+radius),outline=alpha_color,width=4)
+    d.ellipse((x-7,y-7,x+7,y+7),fill=WHITE,outline=color,width=2)
+
 def badge(d,x,y,word,amount,fill):
     rr(d,(x,y,x+amount,y+65),13,fill,(79,87,149),2)
     txt(d,(x+18,y+12),word,20)
@@ -122,6 +138,8 @@ def cell_demo(im,kind,local,dt,t):
                 if phase>=i:
                     rr(d,(x+w-87,yy+55,x+w-39,yy+96),12,RED)
                     txt(d,(x+w-75,yy+61),"!",24)
+        active=min(2,phase)
+        action_pulse(d,x+w-59,y+105+active*139+76,t,RED if kind=="leak" else GREEN)
         txt(d,(x+43,y+48),"SUAS CONTAS",23)
         return
     if kind in ("manager","strength","mfa"):
@@ -136,6 +154,7 @@ def cell_demo(im,kind,local,dt,t):
             rr(d,(x+30,y+291,x+30+int((w-60)*max(.2,local/dt)),y+315),12,GREEN)
             txt(d,(x+36,y+355),"LONGA + EXCLUSIVA",20,CYAN)
             pill(d,(x+42,y+446),"EVITE DADOS PESSOAIS",(26,100,113),WHITE,16)
+            action_pulse(d,x+w-70,y+302,t,GREEN)
         elif kind=="manager":
             rr(d,(x+111,y+158,x+266,y+318),28,(49,56,105),CYAN,4)
             d.arc((x+148,y+130,x+231,y+238),175,365,fill=CYAN,width=12)
@@ -144,6 +163,7 @@ def cell_demo(im,kind,local,dt,t):
                 rr(d,(x+45,y+365+k*59,x+w-45,y+410+k*59),12,(33,45,82),(74,109,156))
                 txt(d,(x+59,y+373+k*59),word,18)
                 txt(d,(x+w-75,y+375+k*59),"✓",22,GREEN)
+            action_pulse(d,x+w-62,y+389+min(2,phase)*59,t,GREEN)
         else:
             txt(d,(x+54,y+163),"Seu código de acesso",20)
             for i in range(6):
@@ -153,6 +173,7 @@ def cell_demo(im,kind,local,dt,t):
             rr(d,(x+49,y+354,x+w-49,y+417),15,GREEN)
             txt(d,(x+103,y+373),"CONFIRMAR",20,NAVY)
             pill(d,(x+35,y+466),"NÃO ENVIE O CÓDIGO", (106,39,70),WHITE,17)
+            action_pulse(d,x+66+min(5,phase+1)*51,y+255,t,CYAN)
         return
     if kind in ("recap","cta"):
         for i,(icon,word) in enumerate([("1","SENHAS DIFERENTES"),("2","SENHAS LONGAS"),("3","DUAS ETAPAS")]):
@@ -192,6 +213,9 @@ def show_frame(global_t,part_durations,cutoffs,master,senha):
         txt(d,(37,139),detail,14,WHITE)
     cell_demo(im,kind,local,dt,global_t)
     d=ImageDraw.Draw(im)
+    caption=short_caption(spoken,local,dt)
+    rr(d,(22,778,518,837),15,(6,10,29),(255,55,153),2)
+    txt(d,(36,793),caption[:43],16,WHITE)
     rr(d,(22,851,518,909),15,(10,13,33),(57,221,226),2)
     phrase="SENHA ÚNICA = MAIS SEGURANÇA" if idx<8 else "SALVE  •  COMPARTILHE  •  SIGA"
     txt(d,(34,867),phrase,17,WHITE)
