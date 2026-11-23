@@ -60,7 +60,34 @@ def analyze_video(file):
     except (ZeroDivisionError,ValueError):
         fps=0
     assert_true(29<=fps<=60,f"FPS inválido: {file.name}: {fps}")
-    return {"file":file.name,"duration_s":round(duration,1),"resolution":f"{w}x{h}","fps":round(fps,2)}
+    # Movimento real mínimo: amostra em 2 fps e mede diferença média de pixels.
+    # Partículas microscópicas não devem mascarar uma tela parada por 8–18 s.
+    try:
+        raw=subprocess.check_output(["ffmpeg","-v","error","-i",str(file),
+            "-vf","fps=2,scale=90:160,format=gray","-f","rawvideo","pipe:1"],
+            timeout=90)
+    except (subprocess.CalledProcessError,subprocess.TimeoutExpired) as e:
+        raise GateError(f"FFmpeg não mediu movimento de {file.name}: {e}") from e
+    frame_size=90*160
+    frames=[raw[i:i+frame_size] for i in range(0,len(raw),frame_size)
+            if len(raw[i:i+frame_size])==frame_size]
+    assert_true(len(frames)>=120,f"Amostras visuais insuficientes: {file.name}")
+    diffs=[sum(abs(a-b) for a,b in zip(before,after))/frame_size
+           for before,after in zip(frames,frames[1:])]
+    near_static=[value<.30 for value in diffs]
+    longest=current=0
+    for quiet in near_static:
+        current=current+1 if quiet else 0
+        longest=max(longest,current)
+    static_ratio=sum(near_static)/max(1,len(near_static))
+    longest_static_s=longest/2
+    assert_true(longest_static_s<=4.0,
+                f"Trecho quase estático excede 4 s: {file.name}: {longest_static_s:.1f}s")
+    assert_true(static_ratio<=.58,
+                f"Movimento insuficiente: {file.name}: {static_ratio:.0%} quase estático")
+    return {"file":file.name,"duration_s":round(duration,1),"resolution":f"{w}x{h}",
+            "fps":round(fps,2),"near_static_ratio":round(static_ratio,3),
+            "longest_near_static_s":round(longest_static_s,1)}
 
 def check_manifest(doc, technical=True):
     assert_true(isinstance(doc,dict),"Manifesto deve ser objeto JSON")
