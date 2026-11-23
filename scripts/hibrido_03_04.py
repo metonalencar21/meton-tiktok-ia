@@ -90,6 +90,9 @@ def cell_perms(im,kind,local,dt,t):
             if kind in ("location","camera","microphone"):
                 active=label.lower()!=kind and phase<2
             check(d,x+w-146,yy+49,active)
+        target=min(2,phase)
+        base.action_pulse(d,x+w-103,y+155+target*121+72,t,
+                          RED if kind=="revoke" else CYAN)
         if kind in ("toggle","revoke","location","camera","microphone"):
             pill(d,(x+44,y+537),"REVOGAR SE NÃO PRECISA",(96,29,77),WHITE,15)
         return
@@ -121,6 +124,9 @@ def cell_backup(im,kind,local,dt,t):
             d.polygon([(sx+10,sy+88),(sx+39,sy+47),(sx+61,sy+74),(sx+85,sy+36),(sx+88,sy+94)],fill=(34,65,82))
             if kind=="gallery" and phase>=i//2:
                 rr(d,(sx+4,sy+4,sx+92,sy+104),10,(20,22,43,170))
+        selected=min(5,phase+1)
+        sx=x+35+(selected%3)*107;sy=y+140+(selected//3)*123
+        base.action_pulse(d,sx+48,sy+54,t,GREEN)
         if kind=="cloud":
             rr(d,(x+64,y+407,x+w-64,y+471),22,(36,89,140),CYAN,3)
             txt(d,(x+92,y+421),"↑  BACKUP",19)
@@ -168,6 +174,9 @@ def picture(t,lens,bounds,master,theme,scenes,render):
         txt(d,(36,144),sub,14)
     render(image,kind,local,dt,t)
     d=ImageDraw.Draw(image)
+    caption=base.short_caption(spoken,local,dt)
+    rr(d,(20,778,520,838),15,(6,10,29),PINK,2)
+    txt(d,(35,793),caption[:43],16,WHITE)
     rr(d,(20,852,520,909),15,(9,14,37),CYAN,2)
     footer="SALVE  •  COMPARTILHE  •  SIGA" if idx>=len(scenes)-2 else SCRIPT[theme]["footer"]
     txt(d,(32,868),footer,17)
@@ -179,7 +188,7 @@ def generate(theme):
     specs=SCRIPT[theme]
     scenes=specs["scenes"]
     master=base.img_source(base.ASSET/"personagem-mestre.jpg")
-    show=cell_perms if theme=="permissoes" else cell_backup
+    show=specs.get("renderer") or (cell_perms if theme=="permissoes" else cell_backup)
     with tempfile.TemporaryDirectory() as td:
         tmp=Path(td)
         audios=[]
