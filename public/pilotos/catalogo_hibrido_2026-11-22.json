@@ -7,6 +7,9 @@
   "approved": false,
   "scheduled": false,
   "published": false,
+  "last_audit": "2026-11-23",
+  "audit_result": "blocked_for_visual_motion",
+  "audit_report": "docs/REVISAO_HIBRIDOS_2026-11-23.md",
   "note": "Quatro vídeos completos com voz neural pt-BR; personagem CGI 2.5D nas aberturas e telas de celular animadas. Sem atuação 3D articulada nem lip-sync profissional. Exigem avaliação visual antes de publicar.",
   "videos": [
     {
