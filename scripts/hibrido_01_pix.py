@@ -120,3 +120,5 @@ if __name__=="__main__":
     meta["title"]="Golpe do Pix urgente"
     meta_path.write_text(json.dumps(meta,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
     print("PIX_HIBRIDO_COMPLETO",meta,flush=True)
+
+# Render revision 2026-11-23: ações e legendas dinâmicas.

@@ -238,3 +238,5 @@ def generate(theme):
 if __name__=="__main__":
     for topic in ("permissoes","backup"):
         generate(topic)
+
+# Render revision 2026-11-23: ações e legendas dinâmicas.

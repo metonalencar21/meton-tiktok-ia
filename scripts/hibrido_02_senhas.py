@@ -279,3 +279,5 @@ def main():
         (OUT/"hibrido_02_senhas_diferentes.json").write_text(json.dumps(meta,ensure_ascii=False,indent=2)+"\n")
         print("HIBRIDO_SENHAS_OK",meta,"bytes",target.stat().st_size,flush=True)
 if __name__=="__main__":main()
+
+# Render revision 2026-11-23: ações e legendas dinâmicas.
