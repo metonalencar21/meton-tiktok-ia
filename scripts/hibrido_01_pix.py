@@ -66,6 +66,8 @@ def cell_pix(im,kind,local,dt,t):
             if kind=="compare":
                 rr(d,(x+45,y+501,x+w-45,y+555),14,(31,118,103),GREEN,2)
                 base.txt(d,(x+67,y+516),"USE OUTRO CANAL",17,NAVY)
+            target_y=y+244+min(2,phase)*83
+            base.action_pulse(d,x+w-55,target_y,t,RED if phase>=1 else CYAN)
         else:
             rr(d,(x+42,y+145,x+w-42,y+224),17,(31,46,81),(86,110,146),2)
             base.txt(d,(x+64,y+163),"VALOR DO PIX",17)
@@ -75,6 +77,7 @@ def cell_pix(im,kind,local,dt,t):
             if kind=="stop":
                 rr(d,(x+29,y+404,x+w-29,y+527),20,(154,27,63),RED,3)
                 base.txt(d,(x+102,y+436),"PARE!",35,YELLOW)
+                base.action_pulse(d,x+w//2,y+466,t,RED)
             else:
                 rr(d,(x+30,y+437,x+w-30,y+501),17,(40,72,81),(59,214,202),3)
                 base.txt(d,(x+93,y+453),"NÃO CONFIRMAR",20)
@@ -86,6 +89,7 @@ def cell_pix(im,kind,local,dt,t):
         base.txt(d,(x+83,y+365),"CONTATO JÁ SALVO",18)
         d.ellipse((x+131,y+445,x+258,y+572),fill=GREEN)
         base.txt(d,(x+169,y+478),"☎",39,NAVY)
+        base.action_pulse(d,x+194,y+508,t,GREEN)
         return
     if kind=="resolve":
         base.txt(d,(x+100,y+86),"CONFIRMADO!",23,GREEN)
@@ -107,7 +111,7 @@ def cell_pix(im,kind,local,dt,t):
     base.rr(d,(x-30,y+286,x+w+30,y+420),22,(17,21,58),PINK,3)
     base.txt(d,(x,y+313),"PIX URGENTE?",28,YELLOW)
     base.txt(d,(x,y+362),"LIGUE ANTES!",24,CYAN)
-engine.cell_backup=cell_pix
+engine.SCRIPT["pix"]["renderer"]=cell_pix
 
 if __name__=="__main__":
     engine.generate("pix")
