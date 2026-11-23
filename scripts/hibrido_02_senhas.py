@@ -106,10 +106,22 @@ def short_caption(spoken,local,dt,max_words=7):
 def action_pulse(d,x,y,t,color=CYAN):
     """Toque visível na interface: anel pulsante + ponto de contato."""
     phase=(t*2.2)%1
-    radius=13+int(22*phase)
+    radius=15+int(34*phase)
     alpha_color=tuple(int(c*(1-.45*phase)) for c in color)
-    d.ellipse((x-radius,y-radius,x+radius,y+radius),outline=alpha_color,width=4)
-    d.ellipse((x-7,y-7,x+7,y+7),fill=WHITE,outline=color,width=2)
+    d.ellipse((x-radius,y-radius,x+radius,y+radius),outline=alpha_color,width=6)
+    orbit=25
+    ox=x+int(math.cos(t*5.5)*orbit);oy=y+int(math.sin(t*5.5)*orbit)
+    d.ellipse((ox-5,oy-5,ox+5,oy+5),fill=color)
+    d.ellipse((x-8,y-8,x+8,y+8),fill=WHITE,outline=color,width=3)
+
+def draw_caption(d,spoken,local,dt,x1=22,x2=518):
+    caption=short_caption(spoken,local,dt)
+    rr(d,(x1,778,x2,837),15,(6,10,29),PINK,2)
+    txt(d,(x1+14,793),caption[:43],16,WHITE)
+    words=spoken.split();chunks=max(1,math.ceil(len(words)/7))
+    phase=((local/max(.1,dt))*chunks)%1
+    rr(d,(x1+13,830,x2-13,834),2,(52,55,92))
+    rr(d,(x1+13,830,x1+13+int((x2-x1-26)*phase),834),2,CYAN)
 
 def badge(d,x,y,word,amount,fill):
     rr(d,(x,y,x+amount,y+65),13,fill,(79,87,149),2)
@@ -213,9 +225,7 @@ def show_frame(global_t,part_durations,cutoffs,master,senha):
         txt(d,(37,139),detail,14,WHITE)
     cell_demo(im,kind,local,dt,global_t)
     d=ImageDraw.Draw(im)
-    caption=short_caption(spoken,local,dt)
-    rr(d,(22,778,518,837),15,(6,10,29),(255,55,153),2)
-    txt(d,(36,793),caption[:43],16,WHITE)
+    draw_caption(d,spoken,local,dt)
     rr(d,(22,851,518,909),15,(10,13,33),(57,221,226),2)
     phrase="SENHA ÚNICA = MAIS SEGURANÇA" if idx<8 else "SALVE  •  COMPARTILHE  •  SIGA"
     txt(d,(34,867),phrase,17,WHITE)

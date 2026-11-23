@@ -2,6 +2,8 @@
 """Piloto híbrido 01: golpe do Pix urgente.
 Usa o mesmo motor dos vídeos 02/03/04 e interface do celular
 específica do Pix. NÃO publica automaticamente.
+
+Revisão 23/11: indicadores de toque e progresso de legenda reforçados.
 """
 import json, math
 from PIL import Image,ImageDraw

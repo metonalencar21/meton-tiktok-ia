@@ -174,9 +174,7 @@ def picture(t,lens,bounds,master,theme,scenes,render):
         txt(d,(36,144),sub,14)
     render(image,kind,local,dt,t)
     d=ImageDraw.Draw(image)
-    caption=base.short_caption(spoken,local,dt)
-    rr(d,(20,778,520,838),15,(6,10,29),PINK,2)
-    txt(d,(35,793),caption[:43],16,WHITE)
+    base.draw_caption(d,spoken,local,dt,20,520)
     rr(d,(20,852,520,909),15,(9,14,37),CYAN,2)
     footer="SALVE  •  COMPARTILHE  •  SIGA" if idx>=len(scenes)-2 else SCRIPT[theme]["footer"]
     txt(d,(32,868),footer,17)
