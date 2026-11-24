@@ -35,7 +35,14 @@ STORY=[
  "Esse aviso pode evitar um prejuízo. Salve o vídeo e compartilhe com alguém que precisa conhecer esse golpe.","cta")
 ]
 engine.SCRIPT["pix"]={"slug":"hibrido_01_pix_urgente","footer":"PIX URGENTE? PARE E CONFIRME",
-                       "title":"Golpe do Pix urgente","scenes":STORY}
+                       "title":"Golpe do Pix urgente","scenes":STORY,
+                       "art_by_kind":{
+                         "hook":"personagem-pix-alerta.jpg",
+                         "stop":"personagem-bloqueio.jpg",
+                         "call":"personagem-ligacao.jpg",
+                         "resolve":"personagem-resolucao.jpg",
+                         "cta":"personagem-mestre.jpg"
+                       }}
 
 def cell_pix(im,kind,local,dt,t):
     rr=base.rr

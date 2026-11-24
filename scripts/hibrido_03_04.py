@@ -14,6 +14,9 @@ WHITE,PINK,CYAN,YELLOW,GREEN,RED,NAVY=(base.WHITE,base.PINK,base.CYAN,base.YELLO
 SCRIPT={
 "permissoes":{
 "art":"personagem-permissoes.jpg","slug":"hibrido_03_permissoes_celular",
+"art_by_kind":{"hook":"personagem-permissoes.jpg","revoke":"personagem-bloqueio.jpg",
+               "review":"personagem-permissoes.jpg","recap":"personagem-mestre.jpg",
+               "cta":"personagem-permissoes.jpg"},
 "footer":"PERMISSÃO SÓ QUANDO PRECISAR",
 "scenes":[
 ("ATENÇÃO","SEU CELULAR TE OBSERVA?","Veja quais acessos você liberou",
@@ -39,6 +42,9 @@ SCRIPT={
 ]},
 "backup":{
 "art":"personagem-backup.jpg","slug":"hibrido_04_backup_fotos",
+"art_by_kind":{"hook":"personagem-backup.jpg","cloud":"personagem-backup.jpg",
+               "protect":"personagem-bloqueio.jpg","restore":"personagem-resolucao.jpg",
+               "cta":"personagem-backup.jpg"},
 "footer":"SUAS FOTOS MERECEM BACKUP",
 "scenes":[
 ("IMPORTANTE","E SE O CELULAR QUEBRAR?","Suas fotos podem sumir",
@@ -152,14 +158,15 @@ def cell_backup(im,kind,local,dt,t):
     txt(d,(47,593),"SUAS FOTOS SÃO ÚNICAS",21,YELLOW)
     txt(d,(47,644),"FAÇA UMA CÓPIA",22,CYAN)
 
-def picture(t,lens,bounds,master,theme,scenes,render):
+def picture(t,lens,bounds,master,theme,scenes,render,art_by_kind=None):
     import math
     idx=next((k for k in range(len(lens)) if bounds[k]<=t<bounds[k+1]),len(lens)-1)
     _,title,sub,spoken,kind=scenes[idx]
     local=t-bounds[idx];dt=lens[idx]
-    is_hero=kind in ("hook","cta")
-    image=base.background(t,is_hero,master)
-    if not is_hero:
+    art_by_kind=art_by_kind or {}
+    is_presenter=kind in art_by_kind
+    image=base.background(t,is_presenter,art_by_kind.get(kind,master))
+    if not is_presenter:
         image=Image.blend(image,Image.new("RGB",(W,H),NAVY),.65)
     d=ImageDraw.Draw(image)
     for k in range(11):
@@ -168,11 +175,17 @@ def picture(t,lens,bounds,master,theme,scenes,render):
     rr(d,(18,20,522,77),14,(10,14,36),PINK,2)
     txt(d,(34,33),"METON DIGITAL",23)
     txt(d,(408,42),"100% IA",14,PINK)
-    if not is_hero:
+    if not is_presenter:
         rr(d,(19,91,522,177),15,(17,16,48),(93,94,151),2)
         txt(d,(35,102),title,24,CYAN if kind!="revoke" else YELLOW)
         txt(d,(36,144),sub,14)
-    render(image,kind,local,dt,t)
+    if is_presenter:
+        rr(d,(25,558,515,734),22,(13,18,52),PINK,3)
+        txt(d,(48,582),title[:28],24,YELLOW)
+        txt(d,(48,636),sub[:40],18,CYAN)
+        base.action_pulse(d,477,696,t,GREEN if kind=="cta" else PINK)
+    else:
+        render(image,kind,local,dt,t)
     d=ImageDraw.Draw(image)
     base.draw_caption(d,spoken,local,dt,20,520)
     rr(d,(20,852,520,909),15,(9,14,37),CYAN,2)
@@ -187,6 +200,8 @@ def generate(theme):
     scenes=specs["scenes"]
     master=base.img_source(base.ASSET/"personagem-mestre.jpg")
     show=specs.get("renderer") or (cell_perms if theme=="permissoes" else cell_backup)
+    art_by_kind={kind:base.img_source(base.ASSET/name)
+                 for kind,name in specs.get("art_by_kind",{}).items()}
     with tempfile.TemporaryDirectory() as td:
         tmp=Path(td)
         audios=[]
@@ -216,7 +231,7 @@ def generate(theme):
         proc=subprocess.Popen(cmd,stdin=subprocess.PIPE)
         try:
             for n in range(math.ceil(total*FPS)):
-                proc.stdin.write(picture(n/FPS,durations,bounds,master,theme,scenes,show).tobytes())
+                proc.stdin.write(picture(n/FPS,durations,bounds,master,theme,scenes,show,art_by_kind).tobytes())
         except BrokenPipeError as exc:raise RuntimeError("Erro FFmpeg "+theme) from exc
         finally:proc.stdin.close()
         if proc.wait()!=0:raise RuntimeError("Falha na renderização "+theme)

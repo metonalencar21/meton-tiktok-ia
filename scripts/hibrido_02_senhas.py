@@ -4,6 +4,7 @@ Personagem CGI 3D da identidade aprovada + demonstrações de celular
 animadas em 2D. Imagens estáticas não são vídeo gerativo 3D; sem postagem.
 """
 import json, math, subprocess, tempfile
+from functools import lru_cache
 from pathlib import Path
 from PIL import Image,ImageDraw,ImageFont,ImageFilter,ImageOps
 import numpy as np
@@ -63,6 +64,7 @@ def txt(d,xy,word,size=22,color=WHITE,bold=True):
 def fit(text):
     return [text[:28],text[28:]] if len(text)>28 else [text]
 
+@lru_cache(maxsize=16)
 def img_source(path):
     im=Image.open(path).convert("RGB")
     scale=max(W/im.width,H/im.height)
@@ -205,8 +207,15 @@ def show_frame(global_t,part_durations,cutoffs,master,senha):
     idx=next((k for k in range(len(part_durations)) if cutoffs[k]<=global_t<cutoffs[k+1]),len(part_durations)-1)
     headline,tag,detail,spoken,kind=STORY[idx]
     local=global_t-cutoffs[idx];dt=part_durations[idx]
-    hero=kind in ("hook","cta")
-    src=master if hero else senha
+    character_scenes={
+      "hook":senha,
+      "leak":img_source(ASSET/"personagem-bloqueio.jpg"),
+      "manager":senha,
+      "recap":master,
+      "cta":img_source(ASSET/"personagem-resolucao.jpg"),
+    }
+    hero=kind in character_scenes
+    src=character_scenes.get(kind,senha)
     im=background(global_t,hero,src)
     if not hero:
        # Soft neon particles moving across a genuine CGI scene for hybrid aesthetics.
@@ -223,7 +232,13 @@ def show_frame(global_t,part_durations,cutoffs,master,senha):
         rr(d,(18,90,522,173),17,(16,16,45),(88,93,143),2)
         txt(d,(36,99),tag,26,YELLOW if kind=="leak" else CYAN)
         txt(d,(37,139),detail,14,WHITE)
-    cell_demo(im,kind,local,dt,global_t)
+    if hero:
+        rr(d,(27,565,513,733),22,(13,18,52),PINK,3)
+        txt(d,(50,588),tag[:28],24,YELLOW)
+        txt(d,(50,638),detail[:38],18,CYAN)
+        action_pulse(d,474,694,global_t,GREEN if kind=="cta" else PINK)
+    else:
+        cell_demo(im,kind,local,dt,global_t)
     d=ImageDraw.Draw(im)
     draw_caption(d,spoken,local,dt)
     rr(d,(22,851,518,909),15,(10,13,33),(57,221,226),2)
