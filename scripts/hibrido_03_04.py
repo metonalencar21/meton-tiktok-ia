@@ -2,6 +2,7 @@
 """Pilotos híbridos 03 (permissões) e 04 (backup).
 Reutiliza motor e personagem CGI; demonstrações específicas em celular.
 Nunca envia ao TikTok nem ao Metricool.
+Revisão 24/11: planos CGI narrativos e legendas em duas linhas.
 """
 from pathlib import Path
 from PIL import Image,ImageDraw

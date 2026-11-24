@@ -119,7 +119,17 @@ def action_pulse(d,x,y,t,color=CYAN):
 def draw_caption(d,spoken,local,dt,x1=22,x2=518):
     caption=short_caption(spoken,local,dt)
     rr(d,(x1,778,x2,837),15,(6,10,29),PINK,2)
-    txt(d,(x1+14,793),caption[:43],16,WHITE)
+    words=caption.split();lines=[];current=""
+    for word in words:
+        candidate=(current+" "+word).strip()
+        if len(candidate)<=39:
+            current=candidate
+        else:
+            if current:lines.append(current)
+            current=word
+    if current:lines.append(current)
+    for index,line in enumerate(lines[:2]):
+        txt(d,(x1+14,786+index*20),line,15,WHITE)
     words=spoken.split();chunks=max(1,math.ceil(len(words)/7))
     phase=((local/max(.1,dt))*chunks)%1
     rr(d,(x1+13,830,x2-13,834),2,(52,55,92))

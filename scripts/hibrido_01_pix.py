@@ -3,7 +3,7 @@
 Usa o mesmo motor dos vídeos 02/03/04 e interface do celular
 específica do Pix. NÃO publica automaticamente.
 
-Revisão 23/11: indicadores de toque e progresso de legenda reforçados.
+Revisão 24/11: planos CGI narrativos e legendas sem corte de palavras.
 """
 import json, math
 from PIL import Image,ImageDraw
