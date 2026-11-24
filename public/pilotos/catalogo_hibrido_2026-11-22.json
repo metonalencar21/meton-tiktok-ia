@@ -7,10 +7,10 @@
   "approved": false,
   "scheduled": false,
   "published": false,
-  "last_audit": "2026-11-23",
-  "audit_result": "blocked_for_visual_motion",
-  "audit_report": "docs/REVISAO_HIBRIDOS_2026-11-23.md",
-  "note": "Quatro vídeos completos com voz neural pt-BR; personagem CGI 2.5D nas aberturas e telas de celular animadas. Sem atuação 3D articulada nem lip-sync profissional. Exigem avaliação visual antes de publicar.",
+  "last_audit": "2026-11-24",
+  "audit_result": "internal_pass_awaiting_user_visual_approval",
+  "audit_report": "docs/APROVACAO_VISUAL_HIBRIDOS_2026-11-24.md",
+  "note": "Quatro vídeos completos com voz neural pt-BR; cinco planos da apresentadora CGI e cinco demonstrações animadas por episódio. Formato 2.5D, sem rig articulado ou lip-sync. Aprovação explícita do usuário continua obrigatória antes de publicar.",
   "videos": [
     {
       "number": 1,
@@ -20,7 +20,8 @@
       "file": "public/pilotos/hibrido_01_pix_urgente.mp4",
       "preview": "public/pilotos/hibrido_01_preview.jpg",
       "meta": "public/pilotos/hibrido_01_pix_urgente.json",
-      "workflow_run": 45070479997
+      "workflow_run": 45393864016,
+      "media_commit": "bb76cb8"
     },
     {
       "number": 2,
@@ -30,7 +31,8 @@
       "file": "public/pilotos/hibrido_02_senhas_diferentes.mp4",
       "preview": "public/pilotos/hibrido_02_senhas_preview.jpg",
       "meta": "public/pilotos/hibrido_02_senhas_diferentes.json",
-      "workflow_run": 45069471467
+      "workflow_run": 45393863955,
+      "media_commit": "c1cb3a8"
     },
     {
       "number": 3,
@@ -40,7 +42,8 @@
       "file": "public/pilotos/hibrido_03_permissoes_celular.mp4",
       "preview": "public/pilotos/hibrido_03_preview.jpg",
       "meta": "public/pilotos/hibrido_03_permissoes_celular.json",
-      "workflow_run": 45069824087
+      "workflow_run": 45393863954,
+      "media_commit": "ddd813c"
     },
     {
       "number": 4,
@@ -50,7 +53,8 @@
       "file": "public/pilotos/hibrido_04_backup_fotos.mp4",
       "preview": "public/pilotos/hibrido_04_preview.jpg",
       "meta": "public/pilotos/hibrido_04_backup_fotos.json",
-      "workflow_run": 45069824087
+      "workflow_run": 45393863954,
+      "media_commit": "ddd813c"
     }
   ]
 }
