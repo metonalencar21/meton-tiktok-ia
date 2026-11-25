@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/validate_release_gate.py'
+      - 'scripts/prepare_release_candidates.py'
       - 'public/release-candidates/**'
       - '.github/workflows/validar-liberacao.yml'
 
@@ -19,7 +20,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Testar regras de seguranca
-        run: python scripts/validate_release_gate.py --self-test
+        run: |
+          python scripts/validate_release_gate.py --self-test
+          python scripts/prepare_release_candidates.py --self-test
       - name: Instalar FFmpeg para examinar MP4s
         if: hashFiles('public/release-candidates/semana-atual.json') != ''
         run: |
