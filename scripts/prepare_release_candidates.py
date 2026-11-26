@@ -11,6 +11,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import tempfile
 from zoneinfo import ZoneInfo
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -41,7 +42,18 @@ def validate_approval(catalog):
     except ValueError as exc:raise ApprovalError("Data de aprovação inválida") from exc
     videos=catalog.get("videos")
     require(isinstance(videos,list) and len(videos)==4,"Catálogo precisa de quatro vídeos")
+    ids=set()
+    titles=set()
+    sources=set()
     for item in videos:
+        video_id=item.get("id")
+        title=item.get("title")
+        require(isinstance(video_id,str) and video_id.strip(),"ID de vídeo ausente")
+        require(isinstance(title,str) and title.strip(),f"{video_id}: título ausente")
+        require(video_id not in ids,f"ID repetido: {video_id}")
+        require(title.casefold() not in titles,f"Tema repetido: {title}")
+        ids.add(video_id)
+        titles.add(title.casefold())
         require(item.get("approved") is True,f"{item.get('id')}: aprovação individual ausente")
         review=item.get("visual_review")
         require(isinstance(review,dict),f"{item.get('id')}: revisão audiovisual ausente")
@@ -53,6 +65,8 @@ def validate_approval(catalog):
         require(source.is_relative_to(ROOT) and source.is_file(),
                 f"{item.get('id')}: MP4 não encontrado")
         require(source.suffix.lower()==".mp4",f"{item.get('id')}: mídia não é MP4")
+        require(source not in sources,f"Mídia repetida: {source.name}")
+        sources.add(source)
     return videos
 
 def validate_dates(values,now=None):
@@ -117,7 +131,29 @@ def self_test():
     try:validate_dates([future.isoformat()]*4)
     except ApprovalError:pass
     else:raise AssertionError("Datas repetidas foram aceitas")
-    print("SELF-TEST: promoção bloqueia falta de aprovação e datas repetidas")
+    review={key:"pass" for key in PASS_KEYS}
+    review["evidence_notes"]="Evidência audiovisual detalhada e suficiente para o teste automático."
+    dates=[(future+timedelta(days=i)).isoformat() for i in range(4)]
+    with tempfile.TemporaryDirectory(dir=ROOT) as temp_dir:
+        temp=Path(temp_dir)
+        videos=[]
+        for i in range(4):
+            movie=temp/f"video-{i}.mp4"
+            movie.touch()
+            videos.append({"id":f"video-{i}","title":f"Tema original {i}",
+                           "file":movie.relative_to(ROOT).as_posix(),
+                           "approved":True,"visual_review":review})
+        approved={"profile":"@metonalencar","timezone":"America/Fortaleza",
+                  "approved":True,"approval":{"user_approved":True,
+                  "scope":"four_complete_hybrid_videos",
+                  "approved_at":"2026-11-26T08:00:00-03:00"},"videos":videos}
+        result=promote(approved,dates,dry_run=True)
+        assert result=={"status":"ready_to_promote","videos":4}
+        approved["videos"][3]["file"]=approved["videos"][2]["file"]
+        try:validate_approval(approved)
+        except ApprovalError:pass
+        else:raise AssertionError("Mídia repetida foi aceita")
+    print("SELF-TEST: aprovação válida passa; falta de aprovação e duplicatas são bloqueadas")
 
 def main():
     parser=argparse.ArgumentParser()
