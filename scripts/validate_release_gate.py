@@ -6,17 +6,19 @@ Entrada: public/release-candidates/semana-atual.json (somente após vídeos term
 Cada entrada precisa de um MP4 real e evidências da inspeção visual.
 """
 import argparse
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 from pathlib import Path
 import re
 import subprocess
 import sys
+from zoneinfo import ZoneInfo
 
 ROOT=Path(__file__).resolve().parents[1]
 DEFAULT=ROOT/"public/release-candidates/semana-atual.json"
 OLD_MARKERS=("B+ NEXO","STORY 2D CENAS HUMANAS","SLIDES","TEMPLATE ESTATICO",
              "PERSONAGEM GEOMETRICA","BLENDER WORKBENCH PROCEDURAL")
+TZ=ZoneInfo("America/Fortaleza")
 
 class GateError(Exception):
     pass
@@ -89,14 +91,29 @@ def analyze_video(file):
             "fps":round(fps,2),"near_static_ratio":round(static_ratio,3),
             "longest_near_static_s":round(longest_static_s,1)}
 
-def check_manifest(doc, technical=True):
+def check_manifest(doc, technical=True, now=None):
     assert_true(isinstance(doc,dict),"Manifesto deve ser objeto JSON")
     assert_true(doc.get("profile")=="@metonalencar","Perfil TikTok diferente do autorizado")
     assert_true(doc.get("timezone")=="America/Fortaleza","Fuso de publicação incorreto")
     assert_true(doc.get("quality_gate_version")==1,"Versão de validação não reconhecida")
+    now=now or datetime.now(TZ)
+    approval=doc.get("approval")
+    assert_true(isinstance(approval,dict),"Evidência de aprovação explícita ausente")
+    assert_true(approval.get("user_approved") is True,
+                "Usuário ainda não aprovou os quatro vídeos completos")
+    assert_true(approval.get("scope")=="four_complete_hybrid_videos",
+                "Aprovação não cobre os quatro vídeos híbridos completos")
+    raw_approval=approval.get("approved_at")
+    assert_true(isinstance(raw_approval,str),"Data da aprovação explícita ausente")
+    try:approved_at=datetime.fromisoformat(raw_approval)
+    except ValueError:raise GateError(f"Data de aprovação inválida: {raw_approval}")
+    assert_true(approved_at.tzinfo is not None,
+                "Data de aprovação precisa registrar o fuso horário")
+    assert_true(approved_at<=now+timedelta(minutes=5),
+                "Data de aprovação está no futuro")
     entries=doc.get("videos")
     assert_true(isinstance(entries,list) and len(entries)==4,"Precisam existir 4 vídeos únicos")
-    ids=set();topics=set();dates=set();reports=[]
+    ids=set();topics=set();dates=set();scheduled=[];reports=[]
     for i,entry in enumerate(entries):
         assert_true(isinstance(entry,dict),f"Entrada {i+1}: item inválido")
         v_id=entry.get("id")
@@ -113,8 +130,11 @@ def check_manifest(doc, technical=True):
         try:date=datetime.fromisoformat(raw_date)
         except ValueError:raise GateError(f"Data inválida: {raw_date}")
         assert_true(date.tzinfo is None,"Usar horário local America/Fortaleza sem offset")
+        assert_true(date.replace(tzinfo=TZ)>=now+timedelta(hours=2),
+                    f"{v_id}: publicação não tem margem futura de 2 horas")
         assert_true(raw_date not in dates,"Duas postagens no mesmo instante")
         dates.add(raw_date)
+        scheduled.append(date)
         assert_true(entry.get("generative_ai_label") is True,
                     f"{v_id}: rótulo nativo de IA deve ser enviado ao Metricool")
         assert_true(entry.get("auto_publish") is True,
@@ -141,6 +161,7 @@ def check_manifest(doc, technical=True):
                     f"{v_id}: um piloto de demonstração não pode virar postagem sem nova produção")
         if technical:
             reports.append(analyze_video(movie))
+    assert_true(scheduled==sorted(scheduled),"Datas devem estar em ordem crescente")
     return reports
 
 def self_test():
@@ -152,7 +173,18 @@ def self_test():
     try:safe_repo_file("../outside.mp4")
     except GateError:pass
     else:raise AssertionError("Caminho fora do repositório aceito")
-    print("SELF-TEST: gate bloqueia mídia inexistente e caminhos indevidos")
+    now=datetime(2026,11,28,9,0,tzinfo=TZ)
+    expired={"profile":"@metonalencar","timezone":"America/Fortaleza",
+             "quality_gate_version":1,"approval":{"user_approved":True,
+             "scope":"four_complete_hybrid_videos",
+             "approved_at":"2026-11-28T08:00:00-03:00"},"videos":[
+             {"id":f"video-{i}","topic":f"Tema original {i}",
+              "publication_date":f"2026-11-{20+i:02d}T10:00"}
+             for i in range(4)]}
+    try:check_manifest(expired,technical=False,now=now)
+    except GateError:pass
+    else:raise AssertionError("Datas vencidas foram aceitas")
+    print("SELF-TEST: gate bloqueia falta de aprovação, datas vencidas e caminhos indevidos")
 
 def main():
     ap=argparse.ArgumentParser()
